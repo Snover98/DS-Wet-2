@@ -1,0 +1,39 @@
+//
+// Created by Assaf-Haik-Barouch on 28/11/2017.
+//
+
+#ifndef HW2_GLADIATOR_H
+
+#include "Trainer.h"
+
+class Gladiator{
+    private:
+    int ID;             //the gladiator's unique ID. is positive
+    int level;          //the gladiator's level. is positive
+    const Trainer& trainer;   //reference to the trainer that owns the gladiator
+
+    public:
+    //class functions
+    Gladiator(int ID, int level, const Trainer& trainer);
+    ~Gladiator() = default;
+
+    //getters
+    const Trainer& getTrainer();
+    int getID();
+    int getLevel();
+
+    //setters
+    void setID(int ID);
+    void setLevel(int Level);
+};
+
+
+
+
+
+
+
+
+#define HW2_GLADIATOR_H
+
+#endif //HW2_GLADIATOR_H
