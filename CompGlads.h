@@ -7,13 +7,6 @@
 
 #include "Gladiator.h"
 
-
-
-virtual class CompGlads{
-    public:
-    virtual int operator()(Gladiator& g1, Gladiator& g2);
-};
-
 class CompGladsByID : public CompGlads{
     public:
     CompGladsByID() = default;
