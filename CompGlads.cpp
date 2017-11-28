@@ -20,7 +20,16 @@ virtual int operator()(int id, Gladiator& g){
     return (id < g.getID())? -1: 1;
 }
 
-
+/*****************************************
+* Compares the the inputted id and the gladiator's id
+* return values:
+* if the ids are the same, 0
+* if id < g.id, 1
+* if id > g.id, -1
+*******************************************/
+virtual int operator()(Gladiator& g, int id){
+    return (-1)*CompGladsByID::operator()(id,g);
+}
 
 
 /*****************************************
