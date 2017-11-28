@@ -10,7 +10,6 @@
 class CompGladsByID : public CompGlads{
     public:
     CompGladsByID() = default;
-    virtual int operator()(Gladiator& g1, Gladiator& g2) override;
     /*****************COMPARISON************************
      * Compares the the inputted Gladiators by their IDs
      * return values:
@@ -18,12 +17,14 @@ class CompGladsByID : public CompGlads{
      * if g1.id < g2.id, -1
      * if g1.id > g2.id, 1
      **************************************************/
+    virtual int operator()(Gladiator& g1, Gladiator& g2);
+    //works the same, just with an id and a gladiator
+    virtual int operator()(int id, Gladiator& g);
 };
 
 class CompGladsByLevel : public CompGladsByID{
 public:
     CompGladsByLevel() = default;
-    int operator()(Gladiator& g1, Gladiator& g2) override;
     /*****************COMPARISON************************
      * Compares the the inputted Gladiators by their Levels.
      * If they have the same level, they are compared by id IN REVERSE
@@ -34,6 +35,9 @@ public:
      * if g1.level == g2.level and g1.id > g2.id, -1
      * if g1.level == g2.level and g1.id == g2.id, 0
      **************************************************/
+    int operator()(Gladiator& g1, Gladiator& g2) override;
+
+    virtual int operator()(int id, Gladiator& g) override = delete;
 };
 
 
