@@ -14,7 +14,7 @@ class Gladiator{
 
     public:
     //class functions
-    Gladiator(int ID, int level, const Trainer& trainer);
+    Gladiator(int id, int lv, const Trainer &t);
     ~Gladiator() = default;
 
     //getters
@@ -24,7 +24,7 @@ class Gladiator{
 
     //setters
     void setID(int ID);
-    void setLevel(int Level);
+    void setLevel(int level);
 };
 
 
