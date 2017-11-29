@@ -162,7 +162,7 @@ bool BinTree::remove(T& info){
                         leftest = leftest.left;
                     }
                     *this.info = leftest.info;
-                    leftest.parent.left = NULLL;
+                    leftest.parent.left = NULL;
                     ~leftest;
                 } else {
 
@@ -177,13 +177,5 @@ bool BinTree::remove(T& info){
     return false;
 }
 
-
-template <class T, typename Compare>
-
-template <class T, typename Compare>
-
-template <class T, typename Compare>
-
-template <class T, typename Compare>
 
 #endif //DS_WET_2_BINTREE_H
