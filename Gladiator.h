@@ -5,6 +5,7 @@
 #ifndef HW2_GLADIATOR_H
 
 #include "Trainer.h"
+class Trainer;
 
 class Gladiator{
     private:

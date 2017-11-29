@@ -99,8 +99,15 @@ BinTree& BinTree::insert(T& info){
 
 template <class T, typename Compare>
 bool BinTree::remove(T& info){
-    if(parent == NULL)
-        return true; //is this ok for a return value?
+    //if the info is less, go left if needed
+    if(comp(info, this->info) <0 && left != NULL){
+        return left.remove(info);
+    }
+
+    //if the info is less, go left if needed
+    if(comp(info, this->info) > 0 && right != NULL){
+        return right.remove(info);
+    }
 
     //if this is the tree
     if(comp(info, this->info) == 0){
@@ -112,7 +119,7 @@ bool BinTree::remove(T& info){
             } else {
                 parent.right = right;
             }
-            delete *this;
+            ~BinTree();
             return true;
         }
 
@@ -124,7 +131,7 @@ bool BinTree::remove(T& info){
             } else {
                 parent.right = left;
             }
-            delete *this;
+            ~BinTree();
             return true;
         }
 
@@ -136,29 +143,34 @@ bool BinTree::remove(T& info){
             } else {
                 parent.right = NULL;
             }
-            delete *this;
+            ~BinTree();
             return true;
         }
 
         //its a node with 2 children:
         //replace the current node with the smallest node in its right subtree
         if(left != NULL && right != NULL){
-            //if the current right son has no children, replace it with the current node
-            if(right
+            //if the current right son is a leaf, replace it with the current node
+            if(right.right == NULL && right.left == NULL) {
+                *this->info=right.info;
+                right.~BinTree();
+                right = NULL;
+            } else { //right son has children
+                if(*this.right.left != NULL) {
+                    BinTree& leftest =*this.right.left;
+                    while(leftest.left!=NULL){
+                        leftest = leftest.left;
+                    }
+                    *this.info = leftest.info;
+                    leftest.parent.left = NULLL;
+                    ~leftest;
+                } else {
+
+                }
+            }
+
         }
 
-    }
-
-
-
-    //if the info is less, go left if needed
-    if(comp(info, this->info) <0 && left != NULL){
-        return left.remove(info);
-    }
-
-    //if the info is less, go left if needed
-    if(comp(info, this->info) > 0 && right != NULL){
-        return right.remove(info);
     }
 
     //if none of the above happened, the info isn't in the tree

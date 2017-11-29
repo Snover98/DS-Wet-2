@@ -9,7 +9,7 @@ template <class T, typename Compare>
 class SplayTree{
 
 private:
-    T& info
+    T& info;
 public:
 
 };

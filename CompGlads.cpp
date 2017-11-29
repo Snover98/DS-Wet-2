@@ -1,9 +1,8 @@
-it//
+//
 // Created by Assaf-Haik-Barouch on 28/11/2017.
 //
 
 #include "CompGlads.h"
-#include "Gladiator.h"
 
 /*****************************************
 * Compares the the inputted id and the gladiator's id
@@ -12,7 +11,7 @@ it//
 * if id < g.id, -1
 * if id > g.id, 1
 *******************************************/
-virtual int operator()(int id, Gladiator& g){
+virtual int CompGladsByID::operator()(int id, Gladiator& g){
     if(id == g.getID()){
         return 0;
     }
@@ -27,7 +26,7 @@ virtual int operator()(int id, Gladiator& g){
 * if id < g.id, 1
 * if id > g.id, -1
 *******************************************/
-virtual int operator()(Gladiator& g, int id){
+virtual int CompGladsByID::operator()(Gladiator& g, int id){
     return (-1)*CompGladsByID::operator()(id,g);
 }
 

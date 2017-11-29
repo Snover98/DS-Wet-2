@@ -5,15 +5,18 @@
 #ifndef HW2_TRAINER_H
 #define HW2_TRAINER_H
 
-#include "SplayTree.h"
+#include "splayTree.h"
 #include "Gladiator.h"
+#include "CompGlads.h"
+
+class Gladiator;
 
 class Trainer{
     private:
     int ID;
     int num_of_gladiators;
     Gladiator& top_gladiator;
-    SplayTree gladiators;
+    SplayTree<Gladiator, CompGladsByLevel> gladiators;
 
     public:
     //class functions
@@ -25,7 +28,7 @@ class Trainer{
     int getID();
     int getNumOfGladiators();
     Gladiator& getTopGladiator();
-    SplayTree& getGladiators();
+    SplayTree<Gladiator, CompGladsByLevel>& getGladiators();
 
     //setters
     void setID(int ID);
