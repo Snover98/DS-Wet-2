@@ -9,7 +9,7 @@
 
 class CompGladsByID : public CompGlads{
     public:
-    CompGladsByID() = default;
+    CompGladsByID();
     /*****************COMPARISON************************
      * Compares the the inputted Gladiators by their IDs
      * return values:
@@ -38,7 +38,7 @@ public:
      **************************************************/
     int operator()(Gladiator& g1, Gladiator& g2) override;
 
-    virtual int operator()(int id, Gladiator& g) override = delete;
+    virtual int operator()(int id, Gladiator& g) override;
 };
 
 

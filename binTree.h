@@ -8,8 +8,8 @@
 template <class T>
 class DefComp{
 public:
-    DefComp() = default;
-    ~DefComp() = default;
+    DefComp();
+    ~DefComp();
 
     int operator()(T& t1, T& t2){
         if(t1 == t2){
@@ -36,7 +36,7 @@ public:
     BinTree(T& i, BinTree& p, BinTree& l, BinTree& r):
             info(i), parent(p), left(l), right(r), comp(DefComp()) {}
     //default destructor
-    ~BinTree() = default;
+    ~BinTree();
 
     //find node with relevant info. returns NULL if there is none
     BinTree& find(T& info);

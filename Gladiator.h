@@ -15,8 +15,8 @@ class Gladiator{
     public:
     //class functions
     Gladiator(int id, int lv, const Trainer &t);
-    Gladiator() = delete;
-    ~Gladiator() = default;
+    Gladiator();
+    ~Gladiator();
 
     //getters
     const Trainer& getTrainer();
