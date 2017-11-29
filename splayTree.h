@@ -5,11 +5,12 @@
 #ifndef DS_WET_2_SPLAYTREE_H
 #define DS_WET_2_SPLAYTREE_H
 
-template <class T, typename Compare>
+template <class T, class Compare>
 class SplayTree{
 
 private:
     T& info;
+    void splay();
 public:
 
 };

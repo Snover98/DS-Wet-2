@@ -3,6 +3,7 @@
 //
 
 #include "Gladiator.h"
+#include "Trainer.h"
 
 Gladiator::Gladiator(int id, int lv, const Trainer &t): ID(id), level(lv), trainer(t) {}
 

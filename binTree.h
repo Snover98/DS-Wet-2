@@ -19,7 +19,7 @@ public:
     }
 };
 
-template <class T, typename Compare>
+template <class T, class Compare>
 class BinTree{
 
 private:

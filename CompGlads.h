@@ -6,11 +6,10 @@
 #define HW2_COMPGLADS_H
 
 #include "Gladiator.h"
-class Gladiator;
 
 class CompGladsByID{
     public:
-    CompGladsByID();
+    CompGladsByID() = default;
     /*****************COMPARISON************************
      * Compares the the inputted Gladiators by their IDs
      * return values:

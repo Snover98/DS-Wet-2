@@ -3,6 +3,7 @@
 //
 
 #include "CompGlads.h"
+#include "Gladiator.h"
 
 /*****************************************
 * Compares the the inputted id and the gladiator's id
@@ -11,7 +12,7 @@
 * if id < g.id, -1
 * if id > g.id, 1
 *******************************************/
-virtual int CompGladsByID::operator()(int id, Gladiator& g){
+int CompGladsByID::operator()(int id, Gladiator& g){
     if(id == g.getID()){
         return 0;
     }
@@ -26,7 +27,7 @@ virtual int CompGladsByID::operator()(int id, Gladiator& g){
 * if id < g.id, 1
 * if id > g.id, -1
 *******************************************/
-virtual int CompGladsByID::operator()(Gladiator& g, int id){
+int CompGladsByID::operator()(Gladiator& g, int id){
     return (-1)*CompGladsByID::operator()(id,g);
 }
 

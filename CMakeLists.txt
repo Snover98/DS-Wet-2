@@ -4,10 +4,10 @@ project(DS-Wet-2)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
-        CompGlads.cpp
-        CompGlads.h
-        Gladiator.cpp
         Gladiator.h
+        Gladiator.cpp
+        CompGlads.h
+        CompGlads.cpp
         library1.h
         splayTree.h
         Trainer.h

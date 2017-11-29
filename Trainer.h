@@ -6,10 +6,9 @@
 #define HW2_TRAINER_H
 
 #include "splayTree.h"
-#include "Gladiator.h"
-#include "CompGlads.h"
 
 class Gladiator;
+class CompGladsByLevel;
 
 class Trainer{
     private:
