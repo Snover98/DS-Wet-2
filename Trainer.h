@@ -36,11 +36,7 @@ class Trainer{
     //addGladiator
     //removeGladiator
     //emptyTree
-
-
 };
-
-
 
 
 

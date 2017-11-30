@@ -4,6 +4,11 @@ project(DS-Wet-2)
 set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES
+        mainSys.cpp
+        Coliseum.h
+        Coliseum.cpp
+        DSFunctions.cpp
+        Exceptions.h
         Gladiator.h
         Gladiator.cpp
         CompGlads.h
