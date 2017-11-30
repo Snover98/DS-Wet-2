@@ -11,5 +11,6 @@ set(SOURCE_FILES
         library1.h
         splayTree.h
         Trainer.h
+        binTree.h
         )
 add_executable(DS-Wet-2 ${SOURCE_FILES})

@@ -5,6 +5,10 @@
 #ifndef DS_WET_2_BINTREE_H
 #define DS_WET_2_BINTREE_H
 
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
 template <class T>
 class DefComp{
 public:
@@ -46,6 +50,11 @@ public:
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
     bool remove(T& info);
+
+    //different prints in a binary search tree
+    void print_inorder();
+    void print_preorder();
+    void print_postorder();
 };
 
 template <class T, typename Compare>
@@ -156,8 +165,8 @@ bool BinTree::remove(T& info){
                 right.~BinTree();
                 right = NULL;
             } else { //right son has children
-                if(*this.right.left != NULL) {
-                    BinTree& leftest =*this.right.left;
+                if(right.left != NULL) {
+                    BinTree& leftest =right.left;
                     while(leftest.left!=NULL){
                         leftest = leftest.left;
                     }
@@ -165,17 +174,57 @@ bool BinTree::remove(T& info){
                     leftest.parent.left = NULL;
                     ~leftest;
                 } else {
-
+                    BinTree& temp = right;
+                    *this->info=temp.info;
+                    right=temp.right;
+                    ~temp;
                 }
             }
-
+            return true;
         }
-
     }
 
     //if none of the above happened, the info isn't in the tree
     return false;
 }
 
+template <class T, typename Compare>
+void BinTree::print_inorder() {
+    if(left != NULL)
+        left.print_inorder();
+
+    cout<<" "<<info<<" ";
+
+    if(right != NULL)
+        right.print_inorder();
+
+    return;
+}
+
+template <class T, typename Compare>
+void BinTree::print_postorder() {
+    if(left != NULL)
+        left.print_inorder();
+
+    if(right != NULL)
+        right.print_inorder();
+
+    cout<<" "<<info<<" ";
+
+    return;
+}
+
+template <class T, typename Compare>
+void BinTree::print_preorder()  {
+    cout<<" "<<info<<" ";
+
+    if(left != NULL)
+        left.print_inorder();
+
+    if(right != NULL)
+        right.print_inorder();
+
+    return;
+}
 
 #endif //DS_WET_2_BINTREE_H
