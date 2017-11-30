@@ -116,6 +116,18 @@ public:
          */
         bool operator!=(const List<T>::Iterator& iterator) const;
 
+        /**
+         * Iterator comparison (Smaller) operator
+         * @tparam T : Type of the generic list.
+         * @param A : First iterator to be compared.
+         * @param B : Second iterator to be compared.
+         * @return
+         *       TRUE - The iterators DONT points to the SAME (same address)
+         *       node values.
+         *       FALSE - The iterators to the SAME (same address) node.
+         */
+        bool operator<(int num) const;
+
         Iterator& operator=(const List<T>::Iterator& iterator) = default;
 
     private:
@@ -368,6 +380,8 @@ bool operator!=(const List<T> A, const List<T> B) {
     return !(A == B);
 }
 
+
+
 template <class T>
 typename List<T>::Iterator List<T>::Iterator::operator++(int) {
     List<T>::Iterator it(*this); // Saves the position before the increment.
@@ -410,6 +424,11 @@ bool List<T>::Iterator::operator==(const List<T>::Iterator& iterator) const {
 template <class T>
 bool List<T>::Iterator::operator!=(const List<T>::Iterator& iterator) const {
     return !(*this == iterator);
+}
+
+template <class T>
+bool List<T>::Iterator::operator<(int num) const {
+    return (_element < num);
 }
 
 template <class T>

@@ -3,10 +3,17 @@
 //
 #include "Coliseum.h"
 
-StatusType AddTrainerToColiseum(int trainerID) {
-    List<Trainer>::Iterator it = *this.trainersList.begin();
+StatusType Coliseum::AddTrainerToColiseum(int trainerID) {
+    List<Trainer>::Iterator it = trainersList.find(isInList(trainerID));
 
-    //List<string>::Iterator it = listB.begin();
+    if(it != trainersList.end())
+        return FAILURE;
+
+    while(it<trainerID){
+        it++;
+    }
+
+    trainersList.insert(Trainer(trainerID));
 
     return SUCCESS;
 }

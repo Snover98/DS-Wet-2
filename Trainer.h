@@ -20,7 +20,7 @@ class Trainer{
     public:
     //class functions
     Trainer(int id);
-    Trainer() = delete;
+    Trainer();
     ~Trainer();
 
     //getters
@@ -36,8 +36,19 @@ class Trainer{
     //addGladiator
     //removeGladiator
     //emptyTree
+
+    bool operator<(const Trainer& t);
 };
 
+class isInList {
+public:
+    isInList(int id) : ID(id) {}
+    ~isInList();
+    bool operator()(Trainer& t) const {
+        return t.getID() == ID;
+    }
 
-
+private:
+    int ID;
+};
 #endif //HW2_TRAINER_H
