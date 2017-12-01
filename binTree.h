@@ -191,7 +191,7 @@ bool BinTree::remove(T& info){
     //replace the current node with the smallest node in its right subtree
     if(left != NULL && right != NULL){
         //if the current right son is a leaf, replace it with the current node
-        if(curr->right == NULL && curr->right == NULL) {
+        if(curr->right == NULL && curr->left == NULL) {
             delete curr->info;
             curr->info=curr->right->info;
             delete curr->right;
