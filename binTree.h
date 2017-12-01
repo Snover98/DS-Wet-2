@@ -1,6 +1,3 @@
-//
-// Created by oded on 29/11/17.
-//
 
 #ifndef DS_WET_2_BINTREE_H
 #define DS_WET_2_BINTREE_H
