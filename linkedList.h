@@ -7,7 +7,7 @@
 
 #include "Exceptions.h"
 
-using ListExceptions::ElementNotFound;
+using DSExceptions::ElementNotFound;
 
 template <class T> class List {
 public:
@@ -117,7 +117,10 @@ public:
         bool operator!=(const List<T>::Iterator& iterator) const;
 
 
-        Iterator& operator=(const List<T>::Iterator& iterator) = default;
+        Iterator& operator=(const List<T>::Iterator& iterator) {
+            _element = iterator._element;
+            _list = iterator._list;
+        }
 
     private:
         friend class List;
@@ -193,11 +196,15 @@ private:
          * @param prev : pointer to the previous Node object on the list.
          */
         Node(const T &data,
-             Node* const next = nullptr,
-             Node* const prev = nullptr);
+             Node* const next = NULL,
+             Node* const prev = NULL);
 
 
-        Node(const Node& node) = default;
+        Node(const Node& node) {
+            _data = node._data;
+            _next = node._data;
+            _prev = node._prev;
+        }
 
         /**
          * Node Object destructor.
@@ -258,8 +265,8 @@ List<T>& List<T>::operator=(const List<T>& other) {
     delete _head;
     _tail = list._tail;
     _head = list._head;
-    list._head = nullptr;
-    list._tail = nullptr;
+    list._head = NULL;
+    list._tail = NULL;
     return *this;
 }
 
@@ -294,7 +301,7 @@ void List<T>::remove(List<T>::Iterator iterator) {
         iterator._element->_next->_prev = iterator._element->_prev;
     } else {
         _head = iterator._element->_next;
-        iterator._element->_next->_prev = nullptr;
+        iterator._element->_next->_prev = NULL;
     }
 
     iterator._element->isolate();
@@ -430,8 +437,8 @@ List<T>::Node::~Node() {
 
 template <class T>
 void List<T>::Node::isolate() {
-    _next = nullptr;
-    _prev = nullptr;
+    _next = NULL;
+    _prev = NULL;
 }
 
 template <class T>
@@ -439,7 +446,7 @@ void List<T>::swap(List<T>::Node& A, List<T>::Node& B) {
     Node tmp(A);
     A._data = B._data;
     B._data = tmp._data;
-    tmp._data = nullptr;
+    tmp._data = NULL;
     tmp.isolate();
 }
 

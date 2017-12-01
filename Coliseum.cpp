@@ -32,22 +32,25 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
 
     List<Trainer>::Iterator p = it;
 
-    SplayTree& g = (*p).addGladiator(gladiatorID, level,(*p));
+    Gladiator* new_gladiator = new Gladiator(gladiatorID,level,*(it));
+
+    //SplayTree& g = (*p).addGladiator(gladiatorID, level,(*p));
+    (*p).addGladiator(*new_gladiator);
 
     if(level>topGladiator.getLevel())
-        topGladiator = (*g);
+        topGladiator = *new_gladiator;
 
     if(level>(*p).getTopGladiator().getLevel())
-        (*p).getTopGladiator() = (*g);
+        (*p).getTopGladiator() = *new_gladiator;
 
-    splayGladsId.insert(gladiatorID, level, (*p));
-    splayGladsLvl.insert(gladiatorID, level, (*p));
+    splayGladsId.insert(*new_gladiator);
+    splayGladsLvl.insert(*new_gladiator);
 
     ++gladiatorsNum;
 }
 
 void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
-    SplayTree& twin = splayGladsId.find(gladiatorID);
+    Gladiator& twin = splayGladsId.find(gladiatorID);
 
     if(!twin)
         throw GladiatorNotFound();

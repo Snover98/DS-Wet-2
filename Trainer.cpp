@@ -3,20 +3,23 @@
 //
 
 #include "Trainer.h"
+#include "Gladiator.h"
 
-SplayTree& Trainer::addGladiator(int gladiatorID, int level, const Trainer& t) {
+void Trainer::addGladiator(Gladiator& gladiator) {
     ++num_of_gladiators;
 
-    return gladiators.insert(Gladiator(gladiatorID,level,t));
+    return gladiators.insert(gladiator);
 }
 
 void Trainer::removeGladiator(int gladiatorID) {
     --num_of_gladiators;
 
-    gladiators.remove(Gladiator(gladiatorID));
+    bool topRemoved = (top_gladiator.getID()==gladiatorID);
 
-    if(!top_gladiator) {
-        SplayTree& topGladiator = gladiators.getTop();
-        top_gladiator = (*topGladiator);
+    gladiators.remove(gladiatorID);
+
+    if(topRemoved) {
+        Gladiator& topGladiator = gladiators.findTop();
+        top_gladiator = topGladiator;
     }
 }

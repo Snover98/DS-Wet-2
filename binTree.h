@@ -23,9 +23,8 @@ public:
     }
 };
 
-template <class T, class Compare>
+template<class T, class Compare>
 class BinTree{
-
 private:
     struct tree_node {
         tree_node* parent;
@@ -37,21 +36,21 @@ private:
     Compare comp;
 public:
     //normal constructor
-    BinTree(Compare comp): Compare(comp), root(NULL) {}
-    BinTree():Compare(DefComp()), root(NULL) {}
+    BinTree(Compare comp): comp(comp), root(NULL) {}
+    BinTree():comp(DefComp<T>()), root(NULL) {}
     ~BinTree();
 
     //Checks if the tree is empty
     bool isEmpty() const { return root==NULL; }
 
     //find node with relevant info. returns NULL if there is none
-    tree_node* find(T& info);
+    T& find(T& info);
 
     //find node with highest info value the tree. returns NULL if there is none
-    tree_node* findTop();
+    T& findTop();
 
     //insert node with relevant info. returns NULL if there it already exists
-    tree_node* insert(T& info);
+    void insert(T& info);
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
     bool remove(T& info);
@@ -65,14 +64,14 @@ public:
     void Postorder();
 };
 
-template <class T, typename Compare>
-tree_node* BinTree::find(T& info){
+template <class T, class Compare>
+T& BinTree<T,Compare>::find(T& info){
     tree_node* curr=root;
 
     while(curr) {
         //if this is the node
         if(comp(info, curr->info) == 0){
-            return curr;
+            return *(curr->info);
         }
         //if the info is less, go right if possible
         if(comp(info, curr->info) > 0) {
@@ -85,27 +84,26 @@ tree_node* BinTree::find(T& info){
     return NULL;
 }
 
-template <class T, typename Compare>
-tree_node* BinTree::findTop() {
+template <class T, class Compare>
+T& BinTree<T,Compare>::findTop() {
     tree_node* curr=root;
 
     while(curr->right != NULL) {
         curr = curr->right;
     }
-    return curr;
+    return *(curr->info);
 }
 
-template <class T, typename Compare>
-tree_node* BinTree::insert(T& info){
+template <class T, class Compare>
+void BinTree<T,Compare>::insert(T& info){
     tree_node* t = new tree_node;
-    t->info=new T(info);
+    t->info=info;
     t->left=NULL;
     t->right=NULL;
     t->parent=NULL;
     //If this is a new tree
     if(isEmpty()) {
         root = t;
-        return t;
     }
 
     tree_node* new_parent;
@@ -128,12 +126,10 @@ tree_node* BinTree::insert(T& info){
     }
 
     t->parent=new_parent;
-
-    return t;
 }
 
-template <class T, typename Compare>
-bool BinTree::remove(T& info){
+template <class T, class Compare>
+bool BinTree<T,Compare>::remove(T& info){
     if(isEmpty()) {
         return false;
     }
@@ -155,7 +151,6 @@ bool BinTree::remove(T& info){
             new_parent->right = curr->right;
             curr->left->parent=new_parent;
         }
-        delete curr->info;
         delete curr;
         return true;
     }
@@ -170,7 +165,6 @@ bool BinTree::remove(T& info){
             new_parent->right = curr->left;
             curr->left->parent=new_parent;
         }
-        delete curr->info;
         delete curr;
         return true;
     }
@@ -182,7 +176,6 @@ bool BinTree::remove(T& info){
         } else {
             new_parent->right = NULL;
         }
-        delete curr->info;
         delete curr;
         return true;
     }
@@ -192,7 +185,6 @@ bool BinTree::remove(T& info){
     if(left != NULL && right != NULL){
         //if the current right son is a leaf, replace it with the current node
         if(curr->right == NULL && curr->left == NULL) {
-            delete curr->info;
             curr->info=curr->right->info;
             delete curr->right;
             curr->right = NULL;
@@ -204,13 +196,11 @@ bool BinTree::remove(T& info){
                 while(leftest->left!=NULL){
                     leftest = leftest->left;
                 }
-                delete curr->info;
                 curr->info = leftest->info;
                 leftest->parent->left=leftest->parent->right;
                 delete leftest;
             } else {
                 tree_node* temp = curr->right;
-                delete curr->info;
                 curr->info=temp->info;
                 curr->right=temp->right;
                 temp->right->parent=curr->right;
@@ -224,13 +214,13 @@ bool BinTree::remove(T& info){
     return false;
 }
 
-template <class T, typename Compare>
-void BinTree::Inorder() {
+template <class T, class Compare>
+void BinTree<T,Compare>::Inorder() {
     printInorder(root);
 }
 
-template <class T, typename Compare>
-void BinTree::printInorder(tree_node* p) {
+template <class T, class Compare>
+void BinTree<T,Compare>::printInorder(tree_node* p) {
     if(p != NULL)
         return;
 
@@ -245,13 +235,13 @@ void BinTree::printInorder(tree_node* p) {
     return;
 }
 
-template <class T, typename Compare>
-void BinTree::Postorder() {
+template <class T, class Compare>
+void BinTree<T,Compare>::Postorder() {
     printPostorder(root);
 }
 
-template <class T, typename Compare>
-void BinTree::printPostorder(tree_node* p) {
+template <class T, class Compare>
+void BinTree<T,Compare>::printPostorder(tree_node* p) {
     if(p != NULL)
         return;
 
@@ -266,13 +256,13 @@ void BinTree::printPostorder(tree_node* p) {
     return;
 }
 
-template <class T, typename Compare>
-void BinTree::Preorder() {
+template <class T, class Compare>
+void BinTree<T,Compare>::Preorder() {
     printPreorder(root);
 }
 
-template <class T, typename Compare>
-void BinTree::printPreorder(tree_node* p)  {
+template <class T, class Compare>
+void BinTree<T,Compare>::printPreorder(tree_node* p)  {
     if(p != NULL)
         return;
 

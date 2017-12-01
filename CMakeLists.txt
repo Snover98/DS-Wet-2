@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 98)
 
 set(SOURCE_FILES
         mainSys.cpp
+        linkedList.h
         Coliseum.h
         Coliseum.cpp
         DSFunctions.cpp
@@ -16,6 +17,7 @@ set(SOURCE_FILES
         library1.h
         splayTree.h
         Trainer.h
+        Trainer.cpp
         binTree.h
         )
 add_executable(DS-Wet-2 ${SOURCE_FILES})

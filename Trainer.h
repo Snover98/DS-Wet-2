@@ -34,7 +34,7 @@ class Trainer{
 
     //other functions
     //addGladiator
-    SplayTree& addGladiator(int gladiatorID, int level, const Trainer& t);
+    void addGladiator(Gladiator& gladiator);
     //removeGladiator
     void removeGladiator(int gladiatorID);
     //emptyTree

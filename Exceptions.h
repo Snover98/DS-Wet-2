@@ -8,6 +8,10 @@
 #include <stdexcept>
 
 namespace DSExceptions {
+    class ElementNotFound : public std::runtime_error {
+    public:
+        ElementNotFound() : std::runtime_error("Element not found") {}
+    };
     class TrainerNotFound : public std::runtime_error {
     public:
         TrainerNotFound() : std::runtime_error("Element not found") {}
