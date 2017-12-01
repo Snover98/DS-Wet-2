@@ -38,6 +38,7 @@ private:
 public:
     //normal constructor
     BinTree(Compare comp): Compare(comp), root(NULL) {}
+    BinTree():Compare(DefComp()), root(NULL) {}
     ~BinTree();
 
     //Checks if the tree is empty
