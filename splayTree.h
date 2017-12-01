@@ -5,14 +5,15 @@
 #ifndef DS_WET_2_SPLAYTREE_H
 #define DS_WET_2_SPLAYTREE_H
 
-template <class T, class Compare>
-class SplayTree{
+#include "binTree.h"
 
+template <class T, class Compare>
+class SplayTree:BinTree{
 private:
-    T& info;
     void splay();
 public:
-
+    SplayTree(T& i, BinTree& p, BinTree& l, BinTree& r, Compare c):BinTree(i,p,l,r,c){}
+    SplayTree(T& i, BinTree& p, BinTree& l, BinTree& r):BinTree(i,p,l,r){}
 };
 
 #endif //DS_WET_2_SPLAYTREE_H
