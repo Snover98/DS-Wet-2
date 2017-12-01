@@ -12,6 +12,7 @@
 #include "library1.h"
 #include "CompGlads.h"
 
+
 class Coliseum{
 private:
     List<Trainer> trainersList;
@@ -25,7 +26,9 @@ public:
                 topGladiator(), gladiatorsNum(0) {}
     ~Coliseum();
 
-    StatusType AddTrainerToColiseum(int trainerID);
+    void AddTrainerToColiseum(int trainerID);
+    void AddGladiatorToColiseum(int gladiatorID, int trainerID, int level);
+    void FreeGladiatorFromColiseum(int gladiatorID);
 };
 
 

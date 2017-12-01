@@ -34,21 +34,12 @@ class Trainer{
 
     //other functions
     //addGladiator
+    SplayTree& addGladiator(int gladiatorID, int level, const Trainer& t);
     //removeGladiator
+    void removeGladiator(int gladiatorID);
     //emptyTree
 
-    bool operator<(const Trainer& t);
 };
 
-class isInList {
-public:
-    isInList(int id) : ID(id) {}
-    ~isInList();
-    bool operator()(Trainer& t) const {
-        return t.getID() == ID;
-    }
 
-private:
-    int ID;
-};
 #endif //HW2_TRAINER_H

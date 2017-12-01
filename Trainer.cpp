@@ -4,6 +4,19 @@
 
 #include "Trainer.h"
 
-bool Trainer::operator<(const Trainer& t) {
-    return ID<t.ID;
+SplayTree& Trainer::addGladiator(int gladiatorID, int level, const Trainer& t) {
+    ++num_of_gladiators;
+
+    return gladiators.insert(Gladiator(gladiatorID,level,t));
+}
+
+void Trainer::removeGladiator(int gladiatorID) {
+    --num_of_gladiators;
+
+    gladiators.remove(Gladiator(gladiatorID));
+
+    if(!top_gladiator) {
+        SplayTree& topGladiator = gladiators.getTop();
+        top_gladiator = (*topGladiator);
+    }
 }

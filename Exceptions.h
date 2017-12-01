@@ -7,11 +7,24 @@
 
 #include <stdexcept>
 
-namespace ListExceptions {
-    class ElementNotFound : public std::runtime_error {
+namespace DSExceptions {
+    class TrainerNotFound : public std::runtime_error {
     public:
-        ElementNotFound() : std::runtime_error("Element not found") {}
+        TrainerNotFound() : std::runtime_error("Element not found") {}
     };
+    class TrainerAlreadyIn : public std::runtime_error {
+    public:
+        TrainerAlreadyIn() : std::runtime_error("Element is already in") {}
+    };
+    class GladiatorNotFound : public std::runtime_error {
+    public:
+        GladiatorNotFound() : std::runtime_error("Element not found") {}
+    };
+    class GladiatorAlreadyIn : public std::runtime_error {
+    public:
+        GladiatorAlreadyIn() : std::runtime_error("Element is already in") {}
+    };
+
 }
 
 #endif //DS_WET_2_EXCEPTIONS_H
