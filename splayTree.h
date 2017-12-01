@@ -12,8 +12,8 @@ class SplayTree:BinTree{
 private:
     void splay();
 public:
-    SplayTree(T& i, BinTree& p, BinTree& l, BinTree& r, Compare c):BinTree(i,p,l,r,c){}
-    SplayTree(T& i, BinTree& p, BinTree& l, BinTree& r):BinTree(i,p,l,r){}
+    SplayTree(Compare c):BinTree(c){}
+    SplayTree():BinTree(){}
 };
 
 #endif //DS_WET_2_SPLAYTREE_H
