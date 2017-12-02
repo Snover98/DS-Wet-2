@@ -19,7 +19,7 @@ int Gladiator::getLevel() {
     return this->level;
 }
 
-const Trainer & Gladiator::getTrainer() {
+Trainer & Gladiator::getTrainer() {
     return this->trainer;
 }
 

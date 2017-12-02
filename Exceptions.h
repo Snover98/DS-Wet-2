@@ -28,6 +28,10 @@ namespace DSExceptions {
     public:
         GladiatorAlreadyIn() : std::runtime_error("Element is already in") {}
     };
+    class GladiatorUpgradedIDAlreadyExist : public std::runtime_error {
+    public:
+        GladiatorUpgradedIDAlreadyExist() : std::runtime_error("Element is already in") {}
+    };
 
 }
 

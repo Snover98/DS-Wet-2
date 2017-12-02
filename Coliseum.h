@@ -29,6 +29,20 @@ public:
     void AddTrainerToColiseum(int trainerID);
     void AddGladiatorToColiseum(int gladiatorID, int trainerID, int level);
     void FreeGladiatorFromColiseum(int gladiatorID);
+    void LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease);
+    Gladiator& GetTopGladiator();
+    int FindTopGladiatorInTrainer(int trainerID);
+    int getGladiatorsNum();
+    void getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
+                                      int *numOfGladiator);
+    void UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID);
+    void UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor);
+    void stimulateColiseumTree(SplayTree& tree, int stimulantCode,
+                               int stimulantFactor, int nodesNum);
+    void mergeGladiatorsArrays(Gladiator* arr1, int size1,
+                                      Gladiator* arr2, int size2,
+                                      Gladiator* newArr);
+    void freeColiseum();
 };
 
 

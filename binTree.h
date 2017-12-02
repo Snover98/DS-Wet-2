@@ -1,4 +1,3 @@
-
 #ifndef DS_WET_2_BINTREE_H
 #define DS_WET_2_BINTREE_H
 
@@ -51,6 +50,15 @@ public:
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
     bool remove(T& info);
+
+    //remove all nodes from binary tree
+    void removeAll();
+    void removeAllNodes(tree_node* p);
+
+    //remove all nodes from binary tree and deletes  the info too (assuming the
+    // info was allocated using 'malloc' - we delete the info using 'free'
+    void removeAllAndDeleteInfo();
+    void removeAllNodesAndDeleteInfo(tree_node* p);
 
     //different prints in a binary search tree
     void printInorder(tree_node* p);
@@ -209,6 +217,47 @@ bool BinTree<T,Compare>::remove(T& info){
 
     //if none of the above happened, the info isn't in the tree
     return false;
+}
+
+template <class T, class Compare>
+void BinTree<T,Compare>::removeAll() {
+    removeAllNodes(root);
+    root = NULL;
+}
+
+template <class T, class Compare>
+void BinTree<T,Compare>::removeAllNodes(tree_node* p) {
+    if(p != NULL)
+        return;
+
+    if(p->left)
+        printInorder(p->left);
+
+    if(p->right)
+        printInorder(p->right);
+
+    delete p;
+}
+
+template <class T, class Compare>
+void BinTree<T,Compare>::removeAllAndDeleteInfo() {
+    removeAllNodes(root);
+    root = NULL;
+}
+
+template <class T, class Compare>
+void BinTree<T,Compare>::removeAllNodesAndDeleteInfo(tree_node* p) {
+    if(p != NULL)
+        return;
+
+    if(p->left)
+        printInorder(p->left);
+
+    if(p->right)
+        printInorder(p->right);
+
+    free(p->info);
+    delete p;
 }
 
 template <class T, class Compare>

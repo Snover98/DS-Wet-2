@@ -9,7 +9,7 @@ class Gladiator{
     private:
     int ID;             //the gladiator's unique ID. is positive
     int level;          //the gladiator's level. is positive
-    const Trainer& trainer;   //reference to the trainer that owns the gladiator
+    Trainer& trainer;   //reference to the trainer that owns the gladiator
 
     public:
     //class functions
@@ -19,7 +19,7 @@ class Gladiator{
     ~Gladiator();
 
     //getters
-    const Trainer& getTrainer();
+    Trainer& getTrainer();
     int getID();
     int getLevel();
 
