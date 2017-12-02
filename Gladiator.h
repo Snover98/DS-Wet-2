@@ -3,23 +3,23 @@
 //
 
 #ifndef HW2_GLADIATOR_H
-
-#include "Trainer.h"
+class Trainer;
 
 class Gladiator{
     private:
     int ID;             //the gladiator's unique ID. is positive
     int level;          //the gladiator's level. is positive
-    const Trainer& trainer;   //reference to the trainer that owns the gladiator
+    Trainer& trainer;   //reference to the trainer that owns the gladiator
 
     public:
     //class functions
     Gladiator(int id, int lv, const Trainer &t);
-    Gladiator() = delete;
-    ~Gladiator() = default;
+    Gladiator(int id);
+    Gladiator();
+    ~Gladiator();
 
     //getters
-    const Trainer& getTrainer();
+    Trainer& getTrainer();
     int getID();
     int getLevel();
 

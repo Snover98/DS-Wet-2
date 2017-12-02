@@ -1,0 +1,23 @@
+cmake_minimum_required(VERSION 3.7)
+project(DS-Wet-2)
+
+set(CMAKE_CXX_STANDARD 98)
+
+set(SOURCE_FILES
+        mainSys.cpp
+        linkedList.h
+        Coliseum.h
+        Coliseum.cpp
+        DSFunctions.cpp
+        Exceptions.h
+        Gladiator.h
+        Gladiator.cpp
+        CompGlads.h
+        CompGlads.cpp
+        library1.h
+        splayTree.h
+        Trainer.h
+        Trainer.cpp
+        binTree.h
+        )
+add_executable(DS-Wet-2 ${SOURCE_FILES})

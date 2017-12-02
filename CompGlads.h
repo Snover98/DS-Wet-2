@@ -7,7 +7,7 @@
 
 #include "Gladiator.h"
 
-class CompGladsByID : public CompGlads{
+class CompGladsByID{
     public:
     CompGladsByID() = default;
     /*****************COMPARISON************************
@@ -37,8 +37,6 @@ public:
      * if g1.level == g2.level and g1.id == g2.id, 0
      **************************************************/
     int operator()(Gladiator& g1, Gladiator& g2) override;
-
-    virtual int operator()(int id, Gladiator& g) override = delete;
 };
 
 
