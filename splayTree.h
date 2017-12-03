@@ -10,17 +10,36 @@
 template <class T, class Compare>
 class SplayTree:BinTree{
 private:
+    //the rolls used in the splay
+    //when t's parent is the root and t is a left sin
+    void zig(TreeNode* t){
+        TreeNode* parent = t->parent;
+
+        //move t's right subtree to the parent
+        t->right->parent = parent;
+        parent->left = t->right;
+
+
+        //change t's parent, it's the new root
+        t->parent = NULL;
+
+        //make t the former parent's parent
+        parent->parent = t;
+        t->right = parent;
+    }
+
+    void zag(TreeNode* t);
+
+    void zigZig(TreeNode* t);
+
+    void zagZag(TreeNode* t);
+
+    void zigZag(TreeNode* t);
+
+    void zagZig(TreeNode* t);
 
     //the splay - moving a node to the root
     void splay(TreeNode* t);
-
-    //the rolls used in the splay
-    void zig(TreeNode* t);
-    void zag(TreeNode* t);
-    void zigZig(TreeNode* t);
-    void zagZag(TreeNode* t);
-    void zigZag(TreeNode* t);
-    void zagZig(TreeNode* t);
 public:
     SplayTree(Compare c):BinTree(c){}
     SplayTree():BinTree(){}
