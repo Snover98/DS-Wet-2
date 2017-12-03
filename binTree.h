@@ -3,41 +3,60 @@
 
 #include <iostream>
 #include <cstdlib>
+
 using namespace std;
 
-template <class T>
-class DefComp{
+template<class T>
+class DefComp {
 public:
     DefComp();
+
     ~DefComp();
 
-    int operator()(T& t1, T& t2){
+    int operator()(T& t1, T& t2) {
         if(t1 == t2){
             return 0;
         }
-        return (t1<t2)?-1:1;
+        return (t1 < t2) ? -1 : 1;
     }
 };
 
 template<class T, class Compare>
-class BinTree{
+class BinTree {
 private:
-    struct tree_node {
-        tree_node* parent;
-        tree_node* left;
-        tree_node* right;
-        T* info;
+    struct TreeNode {
+        TreeNode* parent;
+        TreeNode* left;
+        TreeNode* right;
+        T& info;
     };
-    tree_node* root;
+    TreeNode* root;
     Compare comp;
+
+    void removeAllNodesAndDeleteInfo(TreeNode* p);
+
+    void removeAllNodes(TreeNode* p);
+
+    //the recursive functions that run a function recursively in a certain order
+    template <typename Func>
+    void recursiveInorder(TreeNode* p, Func func);
+
+    template <typename Func>
+    void recursivePreorder(TreeNode* p, Func func);
+
+    template <typename Func>
+    void recursivePostorder(TreeNode* p, Func func);
+
 public:
     //normal constructor
-    BinTree(Compare comp): comp(comp), root(NULL) {}
-    BinTree():comp(DefComp<T>()), root(NULL) {}
+    BinTree(Compare comp) : comp(comp), root(NULL) {}
+
+    BinTree() : comp(DefComp<T>()), root(NULL) {}
+
     ~BinTree();
 
     //Checks if the tree is empty
-    bool isEmpty() const { return root==NULL; }
+    bool isEmpty() const { return root == NULL; }
 
     //find node with relevant info. returns NULL if there is none
     T& find(T& info);
@@ -53,30 +72,31 @@ public:
 
     //remove all nodes from binary tree
     void removeAll();
-    void removeAllNodes(tree_node* p);
 
     //remove all nodes from binary tree and deletes  the info too (assuming the
     // info was allocated using 'malloc' - we delete the info using 'free'
     void removeAllAndDeleteInfo();
-    void removeAllNodesAndDeleteInfo(tree_node* p);
 
-    //different prints in a binary search tree
-    void printInorder(tree_node* p);
-    void Inorder();
-    void printPreorder(tree_node* p);
-    void Preorder();
-    void printPostorder(tree_node* p);
-    void Postorder();
+
+    //different orders to run a function on the tree's nodes
+    template <typename Func>
+    void Inorder(Func func);
+
+    template <typename Func>
+    void Preorder(Func func);
+
+    template <typename Func>
+    void Postorder(Func func);
 };
 
-template <class T, class Compare>
-T& BinTree<T,Compare>::find(T& info){
-    tree_node* curr=root;
+template<class T, class Compare>
+T& BinTree<T, Compare>::find(T& info) {
+    TreeNode* curr = root;
 
-    while(curr) {
+    while(curr != NULL) {
         //if this is the node
-        if(comp(info, curr->info) == 0){
-            return *(curr->info);
+        if(comp(info, curr->info) == 0) {
+            return (curr->info);
         }
         //if the info is less, go right if possible
         if(comp(info, curr->info) > 0) {
@@ -89,31 +109,33 @@ T& BinTree<T,Compare>::find(T& info){
     return NULL;
 }
 
-template <class T, class Compare>
-T& BinTree<T,Compare>::findTop() {
-    tree_node* curr=root;
+template<class T, class Compare>
+T& BinTree<T, Compare>::findTop() {
+    TreeNode* curr = root;
 
-    while(curr->right != NULL) {
+    while (curr->right != NULL) {
         curr = curr->right;
     }
-    return *(curr->info);
+    return (curr->info);
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::insert(T& info){
-    tree_node* t = new tree_node;
-    t->info=info;
-    t->left=NULL;
-    t->right=NULL;
-    t->parent=NULL;
+template<class T, class Compare>
+void BinTree<T, Compare>::insert(T& info) {
+    TreeNode* t = new TreeNode;
+    t->info = info;
+    t->left = NULL;
+    t->right = NULL;
+    t->parent = NULL;
+
     //If this is a new tree
     if(isEmpty()) {
         root = t;
     }
 
-    tree_node* new_parent;
-    tree_node* curr = root;
-    while(curr) {
+    TreeNode* new_parent = root;
+    TreeNode* curr = root;
+    //until the needed parent is found (should have it's relative child as NULL)
+    while(curr != NULL) {
         new_parent = curr;
 
         //if the info is less or equal, go right if possible
@@ -124,59 +146,63 @@ void BinTree<T,Compare>::insert(T& info){
         }
     }
 
+    //check if the new node is the left or right child
     if(comp(info, new_parent->info) < 0) {
         new_parent->left = t;
     } else {
         new_parent->right = t;
     }
 
-    t->parent=new_parent;
+    //set the new node's parent
+    t->parent = new_parent;
 }
 
-template <class T, class Compare>
-bool BinTree<T,Compare>::remove(T& info){
+template<class T, class Compare>
+bool BinTree<T, Compare>::remove(T& info) {
     if(isEmpty()) {
         return false;
     }
 
-    tree_node* curr = find(info);
+    TreeNode* curr = find(info);
 
-    if(!curr)
+    //if there is no node with that info in the tree
+    if(curr == NULL){
         return false;
+    }
 
-    tree_node* new_parent = curr->parent;
+    TreeNode* new_parent = curr->parent;
 
-    //if curr has only right son
-    if(curr->left == NULL && curr->right != NULL){
+    //if curr only has a right son
+    if(curr->left == NULL && curr->right != NULL) {
         //if the left node of the parent is the current node
         if(new_parent->left == curr) {
             new_parent->left = curr->right;
-            curr->right->parent=new_parent;
-        } else {
+            curr->right->parent = new_parent;
+        } else{//if the right node of the parent is the current node
             new_parent->right = curr->right;
-            curr->left->parent=new_parent;
+            curr->left->parent = new_parent;
         }
         delete curr;
         return true;
     }
 
     //if there is only a left son
-    if(left != NULL && right == NULL){
+    if(curr->left != NULL && curr->right == NULL) {
         //if the left node of the parent is the current node
         if(new_parent->left == curr) {
             new_parent->left = curr->left;
-            curr->left->parent=new_parent;
-        } else {
+            curr->left->parent = new_parent;
+        } else{//if the right node of the parent is the current node
             new_parent->right = curr->left;
-            curr->left->parent=new_parent;
+            curr->left->parent = new_parent;
         }
         delete curr;
         return true;
     }
 
     //if its a leaf node with no sons, we just delete it
-    if(left == NULL && right == NULL) {
-        if(new_parent->left == curr) {
+    if (curr->left == NULL && curr->right == NULL) {
+        if (new_parent->left == curr) {
             new_parent->left = NULL;
         } else {
             new_parent->right = NULL;
@@ -185,30 +211,30 @@ bool BinTree<T,Compare>::remove(T& info){
         return true;
     }
 
-    //its a node with 2 children:
+    //if it's a node with 2 children:
     //replace the current node with the smallest node in its right subtree
-    if(left != NULL && right != NULL){
+    if (curr->left != NULL && curr->right != NULL) {
         //if the current right son is a leaf, replace it with the current node
-        if(curr->right == NULL && curr->left == NULL) {
-            curr->info=curr->right->info;
+        if (curr->right == NULL && curr->left == NULL) {
+            curr->info = curr->right->info;
             delete curr->right;
             curr->right = NULL;
         } else { //right son has children
 
             //if the current right child has a left child
-            if(curr->right->left != NULL) {
-                tree_node* leftest =curr->right->left;
-                while(leftest->left!=NULL){
+            if (curr->right->left != NULL) {
+                TreeNode* leftest = curr->right->left;
+                while (leftest->left != NULL) {
                     leftest = leftest->left;
                 }
                 curr->info = leftest->info;
-                leftest->parent->left=leftest->parent->right;
+                leftest->parent->left = leftest->parent->right;
                 delete leftest;
             } else {
-                tree_node* temp = curr->right;
-                curr->info=temp->info;
-                curr->right=temp->right;
-                temp->right->parent=curr->right;
+                TreeNode* temp = curr->right;
+                curr->info = temp->info;
+                curr->right = temp->right;
+                temp->right->parent = curr->right;
                 delete temp;
             }
         }
@@ -219,108 +245,97 @@ bool BinTree<T,Compare>::remove(T& info){
     return false;
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::removeAll() {
+template<class T, class Compare>
+void BinTree<T, Compare>::removeAll() {
     removeAllNodes(root);
     root = NULL;
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::removeAllNodes(tree_node* p) {
-    if(p != NULL)
+template<class T, class Compare>
+void BinTree<T, Compare>::removeAllNodes(TreeNode* p) {
+    if (p != NULL){
         return;
+    }
 
-    if(p->left)
-        printInorder(p->left);
+    removeAllNodes(p->left);
 
-    if(p->right)
-        printInorder(p->right);
+    removeAllNodes(p->right);
 
     delete p;
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::removeAllAndDeleteInfo() {
+template<class T, class Compare>
+void BinTree<T, Compare>::removeAllAndDeleteInfo() {
     removeAllNodes(root);
     root = NULL;
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::removeAllNodesAndDeleteInfo(tree_node* p) {
-    if(p != NULL)
+template<class T, class Compare>
+void BinTree<T, Compare>::removeAllNodesAndDeleteInfo(TreeNode* p) {
+    if(p != NULL){
         return;
+    }
 
-    if(p->left)
-        printInorder(p->left);
+    removeAllNodesAndDeleteInfo(p->left);
 
-    if(p->right)
-        printInorder(p->right);
+    removeAllNodesAndDeleteInfo(p->right);
 
-    free(p->info);
+    delete p->info;
     delete p;
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::Inorder() {
-    printInorder(root);
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::Inorder(Func func) {
+    recursiveInorder(root, func);
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::printInorder(tree_node* p) {
-    if(p != NULL)
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func func) {
+    if (p != NULL){
         return;
+    }
 
-    if(p->left)
-        printInorder(p->left);
+    recursiveInorder(p->left, func);
 
-    cout<<" "<<p->info<<" ";
+    func(p->info);
 
-    if(p->right)
-        printInorder(p->right);
-
-    return;
+    recursiveInorder(p->right, func);
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::Postorder() {
-    printPostorder(root);
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::Postorder(Func func) {
+    recursivePostorder(root, func);
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::printPostorder(tree_node* p) {
-    if(p != NULL)
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func func) {
+    if (p != NULL){
         return;
+    }
 
-    if(p->left)
-        printInorder(p->left);
+    recursivePostorder(p->left, func);
 
-    if(p->right)
-        printInorder(p->right);
+    recursivePostorder(p->right, func);
 
-    cout<<" "<<p->info<<" ";
-
-    return;
+    func(p->info);
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::Preorder() {
-    printPreorder(root);
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::Preorder(Func func) {
+    recursivePreorder(root, func);
 }
 
-template <class T, class Compare>
-void BinTree<T,Compare>::printPreorder(tree_node* p)  {
-    if(p != NULL)
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func func) {
+    if (p != NULL){
         return;
+    }
 
-    cout<<" "<<p->info<<" ";
+    func(p->info);
 
-    if(p->left)
-        printInorder(p->left);
+    recursivePreorder(p->left, func);
 
-    if(p->right)
-        printInorder(p->right);
-
-    return;
+    recursivePreorder(p->right, func);
 }
 
 #endif //DS_WET_2_BINTREE_H
