@@ -209,7 +209,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
         }
     }
 
-    while((arr1Counter != (size1-1)) && arr2Counter != (size2-1)) {
+    while((arr1Counter != (size1-1)) || (arr2Counter != (size2-1))) {
         if(arr1Counter < (size1-1)) {
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;
@@ -217,6 +217,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
             newArr[i] = arr2[arr2Counter];
             arr2Counter++;
         }
+        i++;
     }
 }
 
@@ -244,6 +245,8 @@ void Coliseum::stimulateColiseumTree(SplayTree& tree, int stimulantCode,
     for(int i = 0; i < nodesNum; i++) {
         tree.insert(newGlads[i]);
     }
+
+    free(newGlads);
 }
 
 void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {

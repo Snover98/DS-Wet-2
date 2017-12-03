@@ -16,7 +16,13 @@ void Trainer::removeGladiator(int gladiatorID) {
 
     bool topRemoved = (top_gladiator.getID()==gladiatorID);
 
-    gladiators.remove(gladiatorID);
+    Gladiator gladiator1(gladiatorID);
+    Gladiator& gladiator2 = gladiators.find(gladiator1);
+
+    //Do we need to use 'free' or 'delete'? this became quiet confusing..
+    delete gladiator2;
+
+    gladiators.remove(gladiator);
 
     if(topRemoved) {
         Gladiator& topGladiator = gladiators.findTop();
