@@ -207,8 +207,8 @@ public:
     //insert node with relevant info. returns NULL if there it already exists
     void insert(T& info) override;
 
-    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    bool remove(T& info) override;
+//    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
+//    bool remove(T& info) override;
 
 //    //join two trees, where every node in tree2 has a higher info value than those in this tree
 //    void join(SplayTree tree2);
@@ -271,20 +271,20 @@ void SplayTree<T, Compare>::insert(T &info) {
     splay(new_node);
 }
 
-template<class T, class Compare>
-bool SplayTree<T, Compare>::remove(T &info){
-    //remove normally
-    BinTree::remove(info);
-//    //find the node to be removed
-//    TreeNode* found = findNode(info);
+//template<class T, class Compare>
+//bool SplayTree<T, Compare>::remove(T &info){
+//    //remove normally
+//    BinTree::remove(info);
+////    //find the node to be removed
+////    TreeNode* found = findNode(info);
+////
+////    //check if it's actually in the tree
 //
-//    //check if it's actually in the tree
-
-
-
-
-
-}
+//
+//
+//
+//
+//}
 
 //template<class T, class Compare>
 //void SplayTree<T, Compare>::join(SplayTree tree2){
