@@ -23,7 +23,7 @@ public:
 
 template<class T, class Compare>
 class BinTree {
-private:
+protected:
     struct TreeNode {
         TreeNode* parent;
         TreeNode* left;
@@ -32,6 +32,59 @@ private:
     };
     TreeNode* root;
     Compare comp;
+
+    TreeNode* findNode(T& info){
+        TreeNode* curr = root;
+
+        while(curr != NULL) {
+            //if this is the node
+            if(comp(info, curr->info) == 0) {
+                return (curr->info);
+            }
+            //if the info is less, go right if possible
+            if(comp(info, curr->info) > 0) {
+                if(curr->right == NULL){//if there is no node with the info, return the closet one possible
+                    return curr;
+                } else {
+                    curr = curr->right;
+                }
+            } else {//else, go left if possible
+                if(curr->left == NULL){//if there is no node with the info, return the closet one possible
+                    return curr;
+                } else {
+                    curr = curr->left;
+                }
+            }
+        }
+        //if none of the above happened, the info isn't in the tree
+        return NULL;
+    }
+
+    TreeNode* findMaxNode(){
+        if(isEmpty()){
+            return NULL;
+        }
+
+        TreeNode* curr = root;
+
+        while (curr->right != NULL) {
+            curr = curr->right;
+        }
+        return curr;
+    }
+
+    TreeNode* findMinNode(){
+        if(isEmpty()){
+            return NULL;
+        }
+
+        TreeNode* curr = root;
+
+        while (curr->left != NULL) {
+            curr = curr->left;
+        }
+        return curr;
+    }
 
     void removeAllNodesAndDeleteInfo(TreeNode* p);
 
@@ -59,22 +112,25 @@ public:
     bool isEmpty() const { return root == NULL; }
 
     //find node with relevant info. returns NULL if there is none
-    T& find(T& info);
+    virtual T& find(T& info);
 
     //find node with highest info value the tree. returns NULL if there is none
-    T& findTop();
+    virtual T& findMax();
+
+    //find node with lowest info value the tree. returns NULL if there is none
+    virtual T& findMin();
 
     //insert node with relevant info. returns NULL if there it already exists
-    void insert(T& info);
+    virtual void insert(T& info);
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    bool remove(T& info);
+    virtual bool remove(T& info);
 
     //remove all nodes from binary tree
     void removeAll();
 
     //remove all nodes from binary tree and deletes  the info too (assuming the
-    // info was allocated using 'malloc' - we delete the info using 'free'
+    // info was allocated using 'new' - we delete the info using 'delete'
     void removeAllAndDeleteInfo();
 
 
@@ -91,33 +147,27 @@ public:
 
 template<class T, class Compare>
 T& BinTree<T, Compare>::find(T& info) {
-    TreeNode* curr = root;
+    //search for a node with the info
+    TreeNode* found = findNode(info);
 
-    while(curr != NULL) {
-        //if this is the node
-        if(comp(info, curr->info) == 0) {
-            return (curr->info);
-        }
-        //if the info is less, go right if possible
-        if(comp(info, curr->info) > 0) {
-            curr = curr->right;
-        } else {//else, go left if possible
-            curr = curr->left;
-        }
+    if(comp(found->info, info) == 0){//if the found node was the correct one
+        return found->info;
     }
-    //if none of the above happened, the info isn't in the tree
+
+    //otherwise, there is no node with the info
     return NULL;
 }
 
 template<class T, class Compare>
-T& BinTree<T, Compare>::findTop() {
-    TreeNode* curr = root;
-
-    while (curr->right != NULL) {
-        curr = curr->right;
-    }
-    return (curr->info);
+T& BinTree<T, Compare>::findMax() {
+    return findMaxNode()->info;
 }
+
+template<class T, class Compare>
+T& BinTree<T, Compare>::findMin() {
+    return findMinNode()->info;
+}
+
 
 template<class T, class Compare>
 void BinTree<T, Compare>::insert(T& info) {
