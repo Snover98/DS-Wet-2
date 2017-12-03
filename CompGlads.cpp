@@ -6,33 +6,6 @@
 #include "Gladiator.h"
 
 /*****************************************
-* Compares the the inputted id and the gladiator's id
-* return values:
-* if the ids are the same, 0
-* if id < g.id, -1
-* if id > g.id, 1
-*******************************************/
-int CompGladsByID::operator()(int id, Gladiator& g){
-    if(id == g.getID()){
-        return 0;
-    }
-
-    return (id < g.getID())? -1: 1;
-}
-
-/*****************************************
-* Compares the the inputted id and the gladiator's id
-* return values:
-* if the ids are the same, 0
-* if id < g.id, 1
-* if id > g.id, -1
-*******************************************/
-int CompGladsByID::operator()(Gladiator& g, int id){
-    return (-1)*CompGladsByID::operator()(id,g);
-}
-
-
-/*****************************************
 * Compares the the inputted Gladiators by their IDs
 * return values:
 * if the ids are the same, 0
@@ -40,7 +13,11 @@ int CompGladsByID::operator()(Gladiator& g, int id){
 * if g1.id > g2.id, 1
 *******************************************/
 int CompGladsByID::operator()(Gladiator& g1, Gladiator& g2) {
-    return CompGladsByID::operator()(g1.getID(), g2);
+    if(g1.getID() == g2.getID()){
+        return 0;
+    }
+
+    return (g1.getID() < g2.getID())? -1: 1;
 }
 
 /*****************************************
