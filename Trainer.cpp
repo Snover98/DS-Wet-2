@@ -5,27 +5,45 @@
 #include "Trainer.h"
 #include "Gladiator.h"
 
+Trainer::Trainer(int id):ID(id), num_of_gladiators(0), top_gladiator(NULL),
+                gladiators(SplayTree<Gladiator, CompGladsByLevel>(CompGladsByLevel())){}
+
 void Trainer::addGladiator(Gladiator& gladiator) {
-    ++num_of_gladiators;
-
-    return gladiators.insert(gladiator);
+    //insert the gladiator and then increase the number of gladiators
+    gladiators.insert(gladiator);
+    num_of_gladiators++;
 }
 
-void Trainer::removeGladiator(int gladiatorID) {
-    --num_of_gladiators;
-
-    bool topRemoved = (top_gladiator.getID()==gladiatorID);
-
-    Gladiator gladiator1(gladiatorID);
-    Gladiator& gladiator2 = gladiators.find(gladiator1);
-
-    //Do we need to use 'free' or 'delete'? this became quiet confusing..
-    delete gladiator2;
-
-    gladiators.remove(gladiator);
-
-    if(topRemoved) {
-        Gladiator& topGladiator = gladiators.findTop();
-        top_gladiator = topGladiator;
+void Trainer::removeGladiator(Gladiator& g) {
+    //if the gladiator was not there
+    if(!gladiators.remove(g)){
+        return;
     }
+
+    //if g is the trainer's top gladiator, find the new one
+    if((*top_gladiator).getID() == g.getID()) {
+        top_gladiator = gladiators.findMax();
+    }
+
+    //update the number of gladiators
+    num_of_gladiators--;
+
+    //delete the gladiator
+    delete g;
 }
+
+int Trainer::getID() const{
+    return this->ID;
+}
+
+int Trainer::getNumOfGladiators() const{
+    return this->num_of_gladiators;
+}
+
+Gladiator* Trainer::getTopGladiator() const{
+    return this->top_gladiator;
+}
+
+SplayTree<Gladiator, CompGladsByLevel>& Trainer::getGladiators() const{
+    return this->gladiators;
+};

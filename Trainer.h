@@ -5,6 +5,7 @@
 #ifndef HW2_TRAINER_H
 #define HW2_TRAINER_H
 
+#include <clocale>
 #include "splayTree.h"
 
 class Gladiator;
@@ -14,7 +15,7 @@ class Trainer{
     private:
     int ID;
     int num_of_gladiators;
-    Gladiator& top_gladiator;
+    Gladiator* top_gladiator;
     SplayTree<Gladiator, CompGladsByLevel> gladiators;
 
     public:
@@ -24,19 +25,16 @@ class Trainer{
     ~Trainer();
 
     //getters
-    int getID();
-    int getNumOfGladiators();
-    Gladiator& getTopGladiator();
+    int getID() const;
+    int getNumOfGladiators() const;
+    Gladiator* getTopGladiator() const;
     SplayTree<Gladiator, CompGladsByLevel>& getGladiators() const;
-
-    //setters
-    void setID(int ID);
 
     //other functions
     //addGladiator
     void addGladiator(Gladiator& gladiator);
     //removeGladiator
-    void removeGladiator(int gladiatorID);
+    void removeGladiator(Gladiator& g);
     //emptyTree
 
 };
