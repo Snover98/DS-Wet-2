@@ -1,8 +1,49 @@
 //
 // Created by oded on 30/11/17.
 //
+#include <cstdlib>
 #include "Coliseum.h"
+#include <new>
 using namespace DSExceptions;
+
+class putGladiatorsIntoArray{
+private:
+    int array_size;
+    int current_empty_index;
+    Gladiator* array;
+public:
+    putGladiatorsIntoArray(int n, Gladiator* arr):array_size(n), current_empty_index(n-1), array(arr){}
+    void operator()(Gladiator& glad){
+        //if the array is not full
+        if(current_empty_index >= 0){
+            //add the gladiator into the array
+            array[current_empty_index] = glad;
+            //increase the index
+            current_empty_index--;
+        }
+    }
+};
+
+class putGladiatorsIdsIntoArray{
+private:
+    int array_size;
+    int current_empty_index;
+    int* array;
+public:
+    putGladiatorsIdsIntoArray(int n, int* arr):array_size(n), current_empty_index(n-1), array(arr){}
+
+    void operator()(Gladiator& glad){
+        //if the array is not full
+        if(current_empty_index >= 0){
+            //add the gladiator into the array
+            array[current_empty_index] = glad.getID();
+            //decrease the index
+            current_empty_index--;
+        }
+    }
+};
+
+
 
 void Coliseum::AddTrainerToColiseum(int trainerID) {
     //if there are no trainers
@@ -65,7 +106,7 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
 void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
     //find the gladiator using a dummy with the same ID
     Gladiator dummy = Gladiator(gladiatorID);
-    Gladiator* glad = &(splayGladsId.find(dummy));
+    Gladiator* glad = (splayGladsId.find(dummy));
 
     //if no gladiator was found
     if(glad == NULL){
@@ -78,13 +119,16 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
     //remove the gladiator from his trainer's tree
     trainer.removeGladiator(*glad);
 
-    //if the gladiator we are removing is the top gladiator
-    if(CompGladsByLevel::operator()(topGladiator, *glad) == 0) {
+    //if we are freeing the only gladiator
+    if(gladiatorsNum == 1){
+        topGladiator = NULL;
+    } else if(CompGladsByLevel::operator()(*topGladiator, *glad) == 0) {
+        //if the gladiator we are removing is the top gladiator
         List<Trainer>::Iterator it = trainersList.begin();
         topGladiator = (*it).getTopGladiator();
 
         while(it != trainersList.end()){
-            if(topGladiator == NULL || (*it).getTopGladiator().getLevel() > topGladiator.getLevel()) {
+            if(topGladiator == NULL || (*it).getTopGladiator()->getLevel() > topGladiator->getLevel()) {
                 topGladiator = (*it).getTopGladiator();
             }
             it++;
@@ -103,24 +147,29 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
 }
 
 void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
-    Gladiator& gladiator = splayGladsId.find(gladiatorID);
+    //find the gladiator using a dummy with the same ID
+    Gladiator dummy = Gladiator(gladiatorID);
+    Gladiator* gladiator = splayGladsId.find(dummy);
 
-    if(!gladiator)
+    //if no gladiator was found
+    if(gladiator == NULL){
         throw GladiatorNotFound();
+    }
 
-    splayGladsLvl.remove(gladiatorID);
+    //remove the gladiator from the trees sorted by level
+    splayGladsLvl.remove(*gladiator);
+    gladiator->getTrainer().getGladiators().remove(*gladiator);
 
-    gladiator.getTrainer().getGladiators().remove(gladiatorID);
+    //change the gladiator's level
+    gladiator->setLevel(gladiator->getLevel()+levelIncrease);
 
-    gladiator.setLevel(gladiator.getLevel()+levelIncrease);
-
-    splayGladsLvl.insert(gladiator);
-
-    gladiator.getTrainer().getGladiators().insert(gladiator);
+    //put hum back in the level trees
+    splayGladsLvl.insert(*gladiator);
+    gladiator->getTrainer().getGladiators().insert(*gladiator);
 }
 
 Gladiator& Coliseum::GetTopGladiator() {
-    return topGladiator;
+    return *topGladiator;
 }
 
 int Coliseum::getGladiatorsNum() {
@@ -131,11 +180,11 @@ int Coliseum::FindTopGladiatorInTrainer(int trainerID) {
     List<Trainer>::Iterator it = trainersList.begin();
 
     while(it != trainersList.end()){
-        if((*it).getID()==trainerID) {
+        if((*it).getID() == trainerID) {
             if((*it).getNumOfGladiators() == 0) {
                 return -1;
             } else {
-                return (*it).getTopGladiator().getID();
+                return (*it).getTopGladiator()->getID();
             }
         }
     }
@@ -145,23 +194,40 @@ int Coliseum::FindTopGladiatorInTrainer(int trainerID) {
 
 void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                                             int *numOfGladiator) {
+    //if the id is negative
     if(trainerID < 0) {
+        //set numOfGladiator into the number of all of the gladiators
         *numOfGladiator = getGladiatorsNum();
+        //allocate the array accordingly
         *gladiators = (int*)malloc(sizeof(int)*(*numOfGladiator));
-        splayGladsLvl.getByOrder(**gladiators, *numOfGladiator);
+        //check if the allocation was successful
+        if(*gladiators == NULL){
+            throw std::bad_alloc();
+        }
+        //put the gladiators in the array
+        splayGladsLvl.Inorder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
     } else {
         List<Trainer>::Iterator it = trainersList.begin();
 
         while(it != trainersList.end()){
-            if((*it).getID()==trainerID) {
+            if((*it).getID() == trainerID) {
+                //if the trainer has no gladiators
                 if((*it).getNumOfGladiators() == 0) {
+                    //set the number as 0 and set the array as NULL
                     *numOfGladiator = 0;
                     *gladiators = NULL;
                     return;
                 } else {
+                    //set numOfGladiator into the number of gladiators the trainer has
                     *numOfGladiator = (*it).getNumOfGladiators();
+                    //allocate the array accordingly
                     *gladiators = (int*)malloc(sizeof(int)*(*numOfGladiator));
-                    (*it).getGladiators().getByOrder(**gladiators, *numOfGladiator);
+                    //check if the allocation was successful
+                    if(*gladiators == NULL){
+                        throw std::bad_alloc();
+                    }
+                    //put the gladiators in the array
+                    (*it).getGladiators().Inorder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
                     return;
                 }
             }
