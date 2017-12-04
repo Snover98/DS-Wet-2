@@ -12,6 +12,11 @@ void Trainer::addGladiator(Gladiator& gladiator) {
     //insert the gladiator and then increase the number of gladiators
     gladiators.insert(gladiator);
     num_of_gladiators++;
+
+    //check if the new gladiator has a higher level than the top gladiator
+    if(top_gladiator->getLevel() < gladiator.getLevel()){
+        top_gladiator = &gladiator;
+    }
 }
 
 void Trainer::removeGladiator(Gladiator& g) {
