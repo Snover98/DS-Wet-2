@@ -121,7 +121,7 @@ public:
     virtual void insert(T& info);
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    bool remove(T& info);
+    virtual bool remove(T& info);
 
     //remove all nodes from binary tree
     void removeAll();
@@ -220,6 +220,7 @@ void BinTree<T, Compare>::insert(T& info) {
 
 template<class T, class Compare>
 bool BinTree<T, Compare>::remove(T& info) {
+    //the info cannot be in the tree if it's empty
     if(isEmpty()) {
         return false;
     }
@@ -281,7 +282,6 @@ bool BinTree<T, Compare>::remove(T& info) {
             delete curr->right;
             curr->right = NULL;
         } else { //right son has children
-
             //if the current right child has a left child
             if (curr->right->left != NULL) {
                 TreeNode* leftest = curr->right->left;
