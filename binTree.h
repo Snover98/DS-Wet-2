@@ -109,13 +109,13 @@ public:
     bool isEmpty() const { return root == NULL; }
 
     //find node with relevant info. returns NULL if there is none
-    virtual T& find(T& info);
+    virtual T* find(T& info);
 
     //find node with highest info value the tree. returns NULL if there is none
-    virtual T& findMax();
+    virtual T* findMax();
 
     //find node with lowest info value the tree. returns NULL if there is none
-    virtual T& findMin();
+    virtual T* findMin();
 
     //insert node with relevant info. returns NULL if there it already exists
     virtual void insert(T& info);
@@ -143,7 +143,7 @@ public:
 };
 
 template<class T, class Compare>
-T& BinTree<T, Compare>::find(T& info) {
+T* BinTree<T, Compare>::find(T& info) {
     //check if the tree is empty
     if(isEmpty()){
         return NULL;
@@ -153,7 +153,7 @@ T& BinTree<T, Compare>::find(T& info) {
     TreeNode* found = findNode(info);
 
     if(comp(found->info, info) == 0){//if the found node was the correct one
-        return found->info;
+        return &(found->info);
     }
 
     //otherwise, there is no node with the info
@@ -161,21 +161,21 @@ T& BinTree<T, Compare>::find(T& info) {
 }
 
 template<class T, class Compare>
-T& BinTree<T, Compare>::findMax() {
+T* BinTree<T, Compare>::findMax() {
     //check if the tree is empty
     if(isEmpty()){
         return NULL;
     }
-    return findMaxNode()->info;
+    return &(findMaxNode()->info);
 }
 
 template<class T, class Compare>
-T& BinTree<T, Compare>::findMin() {
+T* BinTree<T, Compare>::findMin() {
     //check if the tree is empty
     if(isEmpty()){
         return NULL;
     }
-    return findMinNode()->info;
+    return &(findMinNode()->info);
 }
 
 

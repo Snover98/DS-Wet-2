@@ -197,13 +197,13 @@ public:
     SplayTree():BinTree(){}
 
     //find node with relevant info. returns NULL if there is none
-    T& find(T& info) override;
+    T* find(T& info) override;
 
     //find node with highest info value the tree. returns NULL if there is none
-    T& findMax() override;
+    T* findMax() override;
 
     //find node with lowest info value the tree. returns NULL if there is none
-    T& findMin() override;
+    T* findMin() override;
 
     //insert node with relevant info. returns NULL if there it already exists
     void insert(T& info) override;
@@ -219,7 +219,7 @@ public:
 };
 
 template<class T, class Compare>
-T& SplayTree<T, Compare>::find(T& info){
+T* SplayTree<T, Compare>::find(T& info){
     //if the tree is empty, return NULL
     if(isEmpty()){
         return NULL;
@@ -233,7 +233,7 @@ T& SplayTree<T, Compare>::find(T& info){
 
     //if it has the correct info, return it
     if(found->info == info){
-        return info;
+        return &(found->info);
     }
 
     //otherwise, it was not found so return NULL
@@ -241,7 +241,7 @@ T& SplayTree<T, Compare>::find(T& info){
 };
 
 template<class T, class Compare>
-T& SplayTree<T, Compare>::findMax() {
+T* SplayTree<T, Compare>::findMax() {
     //return NULL if the tree is empty
     if(isEmpty()){
         return NULL;
@@ -254,11 +254,11 @@ T& SplayTree<T, Compare>::findMax() {
     splay(max_node);
 
     //return the max info
-    return max_node->info;
+    return &(max_node->info);
 }
 
 template<class T, class Compare>
-T& SplayTree<T, Compare>::findMin() {
+T* SplayTree<T, Compare>::findMin() {
     //return NULL if the tree is empty
     if(isEmpty()){
         return NULL;
@@ -271,7 +271,7 @@ T& SplayTree<T, Compare>::findMin() {
     splay(min_node);
 
     //return the min info
-    return min_node->info;
+    return &(min_node->info);
 }
 
 template<class T, class Compare>
@@ -291,7 +291,7 @@ void SplayTree<T, Compare>::insert(T &info) {
 
     //move the closet node to the info into the root
     //using split: this is the same as splitting the tree around info
-    T& closest_info = find(info);
+    T& closest_info = *find(info);
 
     //everything to the left of the root should have lower info value than info,
     //and everything to the right of the root should have higher info value than info,
@@ -322,7 +322,7 @@ bool SplayTree<T, Compare>::remove(T &info){
     }
 
     //find the closest info
-    T& closest_info = find(info);
+    T& closest_info = *find(info);
 
     //if the info is not in the tree, return false
     if(comp(info, closest_info) != 0){
