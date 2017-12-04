@@ -6,22 +6,23 @@
 class Trainer;
 
 class Gladiator{
-    private:
+private:
     int ID;             //the gladiator's unique ID. is positive
     int level;          //the gladiator's level. is positive
-    Trainer& trainer;   //reference to the trainer that owns the gladiator
+    Trainer* trainer;   //reference to the trainer that owns the gladiator
 
-    public:
+public:
     //class functions
-    Gladiator(int id, int lv, const Trainer &t);
+    Gladiator(int id, int lv, Trainer* t);
+    Gladiator(int id, int lv, Trainer& t);
     Gladiator(int id);
     Gladiator();
     ~Gladiator();
 
     //getters
-    Trainer& getTrainer();
-    int getID();
-    int getLevel();
+    Trainer& getTrainer() const;
+    int getID() const;
+    int getLevel() const;
 
     //setters
     void setID(int ID);
