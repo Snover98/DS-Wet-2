@@ -22,6 +22,10 @@ public:
             current_empty_index--;
         }
     }
+
+    int getLowestNonEmpty(){
+        return current_empty_index+1;
+    }
 };
 
 class putGladiatorsIdsIntoArray{
