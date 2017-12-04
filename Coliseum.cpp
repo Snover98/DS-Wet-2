@@ -6,26 +6,19 @@
 #include <new>
 using namespace DSExceptions;
 
-class putGladiatorsIntoArray{
-private:
-    int array_size;
-    int current_empty_index;
-    Gladiator* array;
-public:
-    putGladiatorsIntoArray(int n, Gladiator* arr):array_size(n), current_empty_index(n-1), array(arr){}
-    void operator()(Gladiator& glad){
-        //if the array is not full
-        if(current_empty_index >= 0){
-            //add the gladiator into the array
-            array[current_empty_index] = glad;
-            //increase the index
-            current_empty_index--;
-        }
-    }
+class seperateGladsByStimulantCode{
+    int stimulant_code;
+    Gladiator* stimulated;
+    Gladiator* unchanged;
+    int stimulated_num;
+    int unchanged_num;
 
-    int getLowestNonEmpty(){
-        return current_empty_index+1;
-    }
+    seperateGladsByStimulantCode(Gladiator* stimulated, Gladiator* unchanged, int stimulant_code, int glads_num);
+
+
+
+
+
 };
 
 class putGladiatorsIdsIntoArray{
@@ -284,23 +277,15 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
     int arr2Counter = 0;
     int i;
     for(i=0; i<(size1+size2);i++) {
-        if(arr1Counter == (size1-1) || arr2Counter == (size2-1))
+        if(arr1Counter == (size1-1) || arr2Counter == (size2-1)){
             break;
-
-        if(arr1[arr1Counter].getLevel() > arr2[arr2Counter].getLevel()) {
+        }
+        if(CompGladsByLevel::operator()(arr1[arr1Counter], arr2[arr2Counter]) <= 0){
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;
-        } else if(arr1[arr1Counter].getLevel() < arr2[arr2Counter].getLevel()) {
+        } else{
             newArr[i] = arr2[arr2Counter];
             arr2Counter++;
-        } else if(arr1[arr1Counter].getLevel() == arr2[arr2Counter].getLevel()) {
-            if(arr1[arr1Counter].getID() < arr2[arr2Counter].getID()) {
-                newArr[i] = arr1[arr1Counter];
-                arr1Counter++;
-            } else {
-                newArr[i] = arr2[arr2Counter];
-                arr2Counter++;
-            }
         }
     }
 
