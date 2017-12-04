@@ -191,6 +191,7 @@ private:
         //update the root
         root = t;
     }
+
 public:
     SplayTree(Compare c):BinTree(c){}
     SplayTree():BinTree(){}
@@ -207,8 +208,8 @@ public:
     //insert node with relevant info. returns NULL if there it already exists
     void insert(T& info) override;
 
-//    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-//    bool remove(T& info) override;
+    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
+    bool remove(T& info) override;
 
 //    //join two trees, where every node in tree2 has a higher info value than those in this tree
 //    void join(SplayTree tree2);
@@ -219,6 +220,11 @@ public:
 
 template<class T, class Compare>
 T& SplayTree<T, Compare>::find(T& info){
+    //if the tree is empty, return NULL
+    if(isEmpty()){
+        return NULL;
+    }
+
     //find the node or the closest one in value if it does not exist
     TreeNode* found = BinTree::findNode(info);
 
@@ -236,6 +242,11 @@ T& SplayTree<T, Compare>::find(T& info){
 
 template<class T, class Compare>
 T& SplayTree<T, Compare>::findMax() {
+    //return NULL if the tree is empty
+    if(isEmpty()){
+        return NULL;
+    }
+
     //find the max node
     TreeNode* max_node = BinTree::findMax();
 
@@ -248,6 +259,11 @@ T& SplayTree<T, Compare>::findMax() {
 
 template<class T, class Compare>
 T& SplayTree<T, Compare>::findMin() {
+    //return NULL if the tree is empty
+    if(isEmpty()){
+        return NULL;
+    }
+
     //find the min node
     TreeNode* min_node = BinTree::findMin();
 
@@ -260,31 +276,77 @@ T& SplayTree<T, Compare>::findMin() {
 
 template<class T, class Compare>
 void SplayTree<T, Compare>::insert(T &info) {
-    //temporary
-    //insert the info normally
-    BinTree::insert(info);
+    //if the tree is empty, insert normally in the root
+    if(isEmpty()){
+        BinTree::insert(info);
+    }
 
-    //find it's node
-    TreeNode* new_node = findNode(info);
+    //create the node
+    TreeNode* t = new TreeNode;
+    t->info = info;
+    t->left = NULL;
+    t->right = NULL;
+    t->parent = NULL;
 
-    //splay the node
-    splay(new_node);
+
+    //move the closet node to the info into the root
+    //using split: this is the same as splitting the tree around info
+    T& closest_info = find(info);
+
+    //everything to the left of the root should have lower info value than info,
+    //and everything to the right of the root should have higher info value than info,
+    //but we need to check the root itself
+    if(comp(info, root->info) <= 0){//if the root has an info value lower or equal to info's
+        t->left = root;     //put the root to the left of the info
+        root->parent = t;
+        t->right = root->right;
+        root->right = NULL;
+        t->right->parent = t;
+    } else{//if the root has an info value greater than info's
+        t->right = root;    //put the root to the right of the info
+        root->parent = t;
+        t->left = root->left;
+        root->left = NULL;
+        t->left->parent = t;
+    }
+
+    //update the root
+    root = t;
 }
 
-//template<class T, class Compare>
-//bool SplayTree<T, Compare>::remove(T &info){
-//    //remove normally
-//    BinTree::remove(info);
-////    //find the node to be removed
-////    TreeNode* found = findNode(info);
-////
-////    //check if it's actually in the tree
-//
-//
-//
-//
-//
-//}
+template<class T, class Compare>
+bool SplayTree<T, Compare>::remove(T &info){
+    //if the tree is empty or the info is the root, just remove normally
+    if(isEmpty()){
+        return false;
+    }
+
+    //find the closest info
+    T& closest_info = find(info);
+
+    //if the info is not in the tree, return false
+    if(comp(info, closest_info) != 0){
+        return false;
+    }
+
+    //split the tree around info
+    TreeNode* left_subtree = root->left;
+    TreeNode* right_subtree = root->right;
+    left_subtree->parent = NULL;
+    right_subtree->parent = NULL;
+    //delete the node with the info
+    root->left = NULL;
+    root->right = NULL;
+    delete root;
+    //find the max info in the left subtree, splay it and make it the root
+    root = left_subtree;//due to the implementation of splay, we will act as if the tree is only the left part for a bit
+    findMaxNode();  //this splays the max node in the left subtree
+    root->right = right_subtree;    //joins the subtree
+    right_subtree->parent = root;
+
+    //if the removal was successful, return true
+    return true;
+}
 
 //template<class T, class Compare>
 //void SplayTree<T, Compare>::join(SplayTree tree2){
