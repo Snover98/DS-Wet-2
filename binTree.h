@@ -1,9 +1,6 @@
 #ifndef DS_WET_2_BINTREE_H
 #define DS_WET_2_BINTREE_H
 
-#include <iostream>
-#include <cstdlib>
-
 using namespace std;
 
 template<class T>
@@ -39,7 +36,7 @@ protected:
         while(curr != NULL) {
             //if this is the node
             if(comp(info, curr->info) == 0) {
-                return (curr->info);
+                return curr;
             }
             //if the info is less, go right if possible
             if(comp(info, curr->info) > 0) {
@@ -147,6 +144,11 @@ public:
 
 template<class T, class Compare>
 T& BinTree<T, Compare>::find(T& info) {
+    //check if the tree is empty
+    if(isEmpty()){
+        return NULL;
+    }
+
     //search for a node with the info
     TreeNode* found = findNode(info);
 
@@ -160,11 +162,19 @@ T& BinTree<T, Compare>::find(T& info) {
 
 template<class T, class Compare>
 T& BinTree<T, Compare>::findMax() {
+    //check if the tree is empty
+    if(isEmpty()){
+        return NULL;
+    }
     return findMaxNode()->info;
 }
 
 template<class T, class Compare>
 T& BinTree<T, Compare>::findMin() {
+    //check if the tree is empty
+    if(isEmpty()){
+        return NULL;
+    }
     return findMinNode()->info;
 }
 
@@ -180,6 +190,7 @@ void BinTree<T, Compare>::insert(T& info) {
     //If this is a new tree
     if(isEmpty()) {
         root = t;
+        return;
     }
 
     TreeNode* new_parent = root;
@@ -209,14 +220,15 @@ void BinTree<T, Compare>::insert(T& info) {
 
 template<class T, class Compare>
 bool BinTree<T, Compare>::remove(T& info) {
+    //the info cannot be in the tree if it's empty
     if(isEmpty()) {
         return false;
     }
 
-    TreeNode* curr = find(info);
+    TreeNode* curr = findNode(info);
 
     //if there is no node with that info in the tree
-    if(curr == NULL){
+    if(curr == NULL || comp(info, curr->info) != 0){
         return false;
     }
 
@@ -270,7 +282,6 @@ bool BinTree<T, Compare>::remove(T& info) {
             delete curr->right;
             curr->right = NULL;
         } else { //right son has children
-
             //if the current right child has a left child
             if (curr->right->left != NULL) {
                 TreeNode* leftest = curr->right->left;
@@ -341,7 +352,7 @@ void BinTree<T, Compare>::Inorder(Func func) {
 
 template<class T, class Compare, typename Func>
 void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func func) {
-    if (p != NULL){
+    if (p == NULL){
         return;
     }
 
@@ -359,7 +370,7 @@ void BinTree<T, Compare>::Postorder(Func func) {
 
 template<class T, class Compare, typename Func>
 void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func func) {
-    if (p != NULL){
+    if (p == NULL){
         return;
     }
 
@@ -377,7 +388,7 @@ void BinTree<T, Compare>::Preorder(Func func) {
 
 template<class T, class Compare, typename Func>
 void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func func) {
-    if (p != NULL){
+    if (p == NULL){
         return;
     }
 
