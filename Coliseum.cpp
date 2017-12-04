@@ -5,75 +5,100 @@
 using namespace DSExceptions;
 
 void Coliseum::AddTrainerToColiseum(int trainerID) {
-    List<Trainer>::Iterator it = trainersList.begin();
+    //if there are no trainers
+    if(trainersList.getSize() == 0){
+        trainersList.insert(Trainer(trainerID));
+        return;
+    }
 
+    //find where the trainer should be
+    List<Trainer>::Iterator it = trainersList.begin();
     while((*it).getID()<trainerID){
         it++;
     }
 
-    if((*it).getID()==trainerID)
+    //check if the trainer is already in
+    if((*it).getID()==trainerID) {
         throw TrainerAlreadyIn();
+    }
 
-    trainersList.insert(Trainer(trainerID));
+    //insert the trainer in the correct place
+    trainersList.insert(Trainer(trainerID), it);
 }
 
+
 void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level) {
-    if(splayGladsId.find(gladiatorID))
-        throw GladiatorAlreadyIn();
-
+    //find the gladiator's trainer
     List<Trainer>::Iterator it = trainersList.begin();
-
     while((*it).getID()<trainerID){
         it++;
     }
 
-    if(it==trainersList.end())
+    //if the trainer was not found
+    if(it==trainersList.end()){
         throw TrainerNotFound();
+    }
 
     List<Trainer>::Iterator p = it;
 
+    //create the new gladiator
     Gladiator* new_gladiator = new Gladiator(gladiatorID,level,*(it));
 
-    (*p).addGladiator(*new_gladiator);
+    //check if it's already in
+    if(splayGladsId.find(*new_gladiator)){
+        throw GladiatorAlreadyIn();
+    }
 
-    if(level>topGladiator.getLevel())
-        topGladiator = *new_gladiator;
+    //check if the new gladiator has a higher level than the top gladiator
+    if(level>topGladiator->getLevel()){
+        topGladiator = new_gladiator;
+    }
 
-    if(level>(*p).getTopGladiator().getLevel())
-        (*p).getTopGladiator() = *new_gladiator;
-
+    //add the gladiator to the trees
     splayGladsId.insert(*new_gladiator);
     splayGladsLvl.insert(*new_gladiator);
 
-    ++gladiatorsNum;
+    //update the number of gladiators
+    gladiatorsNum++;
 }
 
 void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
-    Gladiator* twin = (Gladiator*)splayGladsId.find(gladiatorID);
+    //find the gladiator using a dummy with the same ID
+    Gladiator dummy = Gladiator(gladiatorID);
+    Gladiator* glad = &(splayGladsId.find(dummy));
 
-    if(!twin)
+    //if no gladiator was found
+    if(glad == NULL){
         throw GladiatorNotFound();
+    }
 
-    Trainer& trainer = (*twin).getTrainer();
-    int gladiatorLvl = (*twin).getLevel();
+    //check the gladiator's trainer
+    Trainer& trainer = (*glad).getTrainer();
 
-    splayGladsLvl.remove(gladiatorLvl);
+    //remove the gladiator from his trainer's tree
+    trainer.removeGladiator(*glad);
 
-    trainer.removeGladiator(gladiatorID);
-
-    if(!topGladiator) {
+    //if the gladiator we are removing is the top gladiator
+    if(CompGladsByLevel::operator()(topGladiator, *glad) == 0) {
         List<Trainer>::Iterator it = trainersList.begin();
-        int maxLvl = 0;
+        topGladiator = (*it).getTopGladiator();
 
         while(it != trainersList.end()){
-            if((*it).getTopGladiator().getLevel()>maxLvl) {
-                maxLvl = (*it).getTopGladiator().getLevel();
+            if(topGladiator == NULL || (*it).getTopGladiator().getLevel() > topGladiator.getLevel()) {
                 topGladiator = (*it).getTopGladiator();
             }
             it++;
         }
     }
-    free(twin);
+
+    //remove the gladiator from the level tree
+    splayGladsLvl.remove(*glad);
+
+    //remove the gladiator from the ID tree
+    splayGladsId.remove(*glad);
+
+    //delete the gladiator and update the number of gladiators
+    delete glad;
     --gladiatorsNum;
 }
 

@@ -18,12 +18,12 @@ private:
     List<Trainer> trainersList;
     SplayTree<Gladiator,CompGladsByID> splayGladsId;
     SplayTree<Gladiator,CompGladsByLevel> splayGladsLvl;
-    Gladiator& topGladiator;
+    Gladiator* topGladiator;
     int gladiatorsNum;
 public:
     //// Constructs a new Coliseum
-    Coliseum(): trainersList(), splayGladsId(), splayGladsLvl(),
-                topGladiator(), gladiatorsNum(0) {}
+    Coliseum(): trainersList(), splayGladsId(SplayTree<Gladiator,CompGladsByID>(CompGladsByID())),
+                splayGladsLvl(SplayTree<Gladiator,CompGladsByLevel>()), topGladiator(NULL), gladiatorsNum(0) {}
     ~Coliseum();
 
     void AddTrainerToColiseum(int trainerID);
