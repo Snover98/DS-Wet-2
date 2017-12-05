@@ -1,7 +1,7 @@
 #ifndef DS_WET_2_BINTREE_H
 #define DS_WET_2_BINTREE_H
 
-using namespace std;
+#include "genericFunction.h"
 
 template<class T, class Compare>
 class BinTree {
@@ -46,17 +46,13 @@ protected:
     void removeAllNodes(TreeNode* p);
 
     //the recursive functions that run a function recursively in a certain order (regarding all the orders)
-    template <typename Func>
-    void recursiveInorder(TreeNode* p, Func& func);
+    void recursiveInorder(TreeNode* p, Func<T>& func);
 
-    template <typename Func>
-    void recursivePreorder(TreeNode* p, Func& func);
+    void recursivePreorder(TreeNode* p, Func<T>& func);
 
-    template <typename Func>
-    void recursivePostorder(TreeNode* p, Func& func);
+    void recursivePostorder(TreeNode* p, Func<T>& func);
 
-    template <typename Func>
-    void recursiveInverseOrder(TreeNode* p, Func& func);
+    void recursiveInverseOrder(TreeNode* p, Func<T>& func);
     
     //comparsion function between the nodes in the search tree
     int comp(T& t1, T& t2);
@@ -94,28 +90,24 @@ public:
 
 
     //different orders to run a function on the tree's nodes
-    template <typename Func>
-    void Inorder(Func& func);
+    void Inorder(Func<T>& func);
 
-    template <typename Func>
-    void Preorder(Func& func);
+    void Preorder(Func<T>& func);
 
-    template <typename Func>
-    void Postorder(Func& func);
+    void Postorder(Func<T>& func);
 
-    template <typename Func>
-    void InverseOrder(Func& func);
+    void InverseOrder(Func<T>& func);
 };
 
 template<class T, class Compare>
 BinTree<T, Compare>::~BinTree(){
     removeAll();
-};
+}
 
 template<class T, class Compare>
 int BinTree<T, Compare>::comp(T& t1, T& t2){
     return Compare::operator()(t1, t2);
-};
+}
 
 template<class T, class Compare>
 T* BinTree<T, Compare>::find(T& info) {
@@ -218,13 +210,13 @@ void BinTree<T, Compare>::removeAllNodesAndDeleteInfo(TreeNode* p) {
     delete p;
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::Inorder(Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::Inorder(Func<T>& func) {
     recursiveInorder(root, func);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -236,13 +228,13 @@ void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func& func) {
     recursiveInorder(p->right, func);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::Postorder(Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::Postorder(Func<T>& func) {
     recursivePostorder(root, func);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -254,13 +246,13 @@ void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func& func) {
     func(p->info);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::Preorder(Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::Preorder(Func<T>& func) {
     recursivePreorder(root, func);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -272,13 +264,13 @@ void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func& func) {
     recursivePreorder(p->right, func);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::InverseOrder(Func& func){
+template<class T, class Compare>
+void BinTree<T, Compare>::InverseOrder(Func<T>& func){
     recursiveInverseOrder(root, func);
 }
 
-template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursiveInverseOrder(TreeNode* p, Func& func) {
+template<class T, class Compare>
+void BinTree<T, Compare>::recursiveInverseOrder(TreeNode* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -298,7 +290,7 @@ void BinTree<T, Compare>::switchNodes(TreeNode *t1, TreeNode *t2) {
 }
 
 template<class T, class Compare>
-BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findNode(T &info, TreeNode *start){
+typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findNode(T &info, TreeNode *start){
     TreeNode* curr = start;
 
     while(curr != NULL) {
@@ -326,7 +318,7 @@ BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findNode(T &info, TreeNode *
 }
 
 template<class T, class Compare>
-BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMaxNode(TreeNode *start){
+typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMaxNode(TreeNode *start){
     if(isEmpty()){
         return NULL;
     }
@@ -340,7 +332,7 @@ BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMaxNode(TreeNode *start)
 }
 
 template<class T, class Compare>
-BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMinNode(TreeNode *start){
+typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMinNode(TreeNode *start){
     if(isEmpty()){
         return NULL;
     }
@@ -354,7 +346,7 @@ BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMinNode(TreeNode *start)
 }
 
 template<class T, class Compare>
-BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertNode(TreeNode *t, TreeNode *start){
+typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertNode(TreeNode *t, TreeNode *start){
     //find the closest node
     TreeNode* closest = findNode(t->info, start);
 
@@ -380,7 +372,7 @@ BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertNode(TreeNode *t, Tree
 }
 
 template<class T, class Compare>
-BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertInfo(T &info){
+typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertInfo(T &info){
     //create the node
     TreeNode* t = new TreeNode;
     t->info = info;

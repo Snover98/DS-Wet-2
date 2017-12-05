@@ -3,47 +3,49 @@
 //
 #include <cstdlib>
 #include "Coliseum.h"
+#include "genericFunction.h"
 
 using namespace DSExceptions;
 
-
-class putGladiatorsIdsIntoArray{
+template<class T>
+class putGladiatorsIdsIntoArray : public Func<T>{
 private:
     int array_size;
     int current_empty_index;
-    int* array;
+    int* id_array;
 public:
-    putGladiatorsIdsIntoArray(int n, int* arr):array_size(n), current_empty_index(n-1), array(arr){}
+    putGladiatorsIdsIntoArray(int n, int* arr):array_size(n), current_empty_index(n-1), id_array(arr){}
 
-    void operator()(Gladiator& glad){
+    void operator()(T& glad) {
         //if the array is not full
         if(current_empty_index >= 0){
             //add the gladiator into the array
-            array[current_empty_index] = glad.getID();
+            id_array[current_empty_index] = glad.getID();
             //increase the index
             current_empty_index++;
         }
     }
 };
 
-class separateGladsByStimulantCode{
+template<class T>
+class separateGladsByStimulantCode : public Func<T>{
 private:
     int stimulant_code;
-    Gladiator* stimulated;
-    Gladiator* unchanged;
+    Gladiator** stimulated;
+    Gladiator** unchanged;
     int stimulated_num;
     int unchanged_num;
 
 public:
-    separateGladsByStimulantCode(Gladiator* stim, Gladiator* u_c, int s_code):
+    separateGladsByStimulantCode(Gladiator** stim, Gladiator** u_c, int s_code):
             stimulant_code(s_code), stimulated(stim), unchanged(u_c), stimulated_num(0), unchanged_num(0){}
 
-    void operator()(Gladiator& glad){
+    void operator()(Gladiator& glad) {
         if(glad.getID()%stimulant_code == 0){
-            stimulated[stimulated_num] = glad;
+            stimulated[stimulated_num] = &glad;
             stimulated_num++;
         } else{
-            unchanged[unchanged_num] = glad;
+            unchanged[unchanged_num] = &glad;
             unchanged_num++;
         }
     }
@@ -238,7 +240,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
             throw std::bad_alloc();
         }
         //put the gladiators in the array
-        putGladiatorsIdsIntoArray put_ids = putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators);
+        putGladiatorsIdsIntoArray<Gladiator> put_ids = putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators);
         splayGladsLvl.InverseOrder(put_ids);
     } else {
         List<Trainer>::Iterator it = trainersList.begin();
@@ -261,7 +263,8 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                         throw std::bad_alloc();
                     }
                     //put the gladiators in the array
-                    putGladiatorsIdsIntoArray put_ids = putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators);
+                    putGladiatorsIdsIntoArray<Gladiator> put_ids = putGladiatorsIdsIntoArray(*numOfGladiator,
+                                                                                             *gladiators);
                     (*it).getGladiators().InverseOrder(put_ids);
                     return;
                 }
@@ -302,8 +305,8 @@ void Coliseum::UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID) {
     gladiator->getTrainer().addGladiator(*gladiator);
 }
 
-void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
-                              Gladiator* arr2, int size2, Gladiator* newArr) {
+void Coliseum::mergeGladiatorsArrays(Gladiator** arr1, int size1,
+                              Gladiator** arr2, int size2, Gladiator** newArr) {
     //merge two sorted arrays
     int arr1Counter = 0;
     int arr2Counter = 0;
@@ -316,7 +319,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
             break;
         }
 
-        if(CompGladsByLevel::operator()(arr1[arr1Counter], arr2[arr2Counter]) <= 0){
+        if(CompGladsByLevel::operator()(*arr1[arr1Counter], *arr2[arr2Counter]) <= 0){
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;
         } else{
@@ -352,12 +355,13 @@ void Coliseum::emptyLevelTrees(){
 
 void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     //allocate all needed arrays
-    Gladiator* stimulated = new Gladiator[gladiatorsNum];
-    Gladiator* unchanged = new Gladiator[gladiatorsNum];
-    Gladiator* sorted = new Gladiator[gladiatorsNum];
+    Gladiator** stimulated = new Gladiator*[gladiatorsNum];
+    Gladiator** unchanged = new Gladiator*[gladiatorsNum];
+    Gladiator** sorted = new Gladiator*[gladiatorsNum];
 
     //create the function object
-    separateGladsByStimulantCode separate = separateGladsByStimulantCode(stimulated, unchanged, stimulantCode);
+    separateGladsByStimulantCode<Gladiator> separate = separateGladsByStimulantCode(stimulated, unchanged,
+                                                                                    stimulantCode);
     //use the function in inverse order
     splayGladsLvl.InverseOrder(separate);
 
@@ -370,7 +374,7 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
 
     //change the levels
     for(int i=0; i<num_stim; i++){
-        stimulated[i].setLevel(stimulantFactor*(stimulated[i].getLevel()));
+        stimulated[i]->setLevel(stimulantFactor*(stimulated[i]->getLevel()));
     }
 
     //merge the arrays into one big sorted array
@@ -378,9 +382,9 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
 
     //put the gladiators back in
     for(int i=0; i<gladiatorsNum; i++){
-        splayGladsLvl.insert(sorted[i]);
+        splayGladsLvl.insert(*sorted[i]);
         //we do this because the actual trainer should not be changed
-        sorted[i].getTrainer().getGladiators().insert(sorted[i]);
+        sorted[i]->getTrainer().getGladiators().insert(*sorted[i]);
     }
 
     //delete all allocated arrays

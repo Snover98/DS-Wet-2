@@ -34,7 +34,7 @@ void Trainer::removeGladiator(Gladiator& g) {
     num_of_gladiators--;
 
     //delete the gladiator
-    delete g;
+    delete &g;
 }
 
 int Trainer::getID() const{
@@ -49,6 +49,6 @@ Gladiator* Trainer::getTopGladiator() const{
     return this->top_gladiator;
 }
 
-SplayTree<Gladiator, CompGladsByLevel>& Trainer::getGladiators() const{
+SplayTree<Gladiator, CompGladsByLevel>& Trainer::getGladiators(){
     return this->gladiators;
 };

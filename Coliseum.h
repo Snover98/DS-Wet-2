@@ -39,9 +39,9 @@ public:
     void UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID);
     void UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor);
 
-    void mergeGladiatorsArrays(Gladiator* arr1, int size1,
-                                      Gladiator* arr2, int size2,
-                                      Gladiator* newArr);
+    void mergeGladiatorsArrays(Gladiator** arr1, int size1,
+                                      Gladiator** arr2, int size2,
+                                      Gladiator** newArr);
 };
 
 

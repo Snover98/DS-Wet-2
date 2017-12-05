@@ -26,7 +26,7 @@ class Trainer{
     int getID() const;
     int getNumOfGladiators() const;
     Gladiator* getTopGladiator() const;
-    SplayTree<Gladiator, CompGladsByLevel>& getGladiators() const;
+    SplayTree<Gladiator, CompGladsByLevel>& getGladiators();
 
     //other functions
     //addGladiator

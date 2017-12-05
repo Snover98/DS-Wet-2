@@ -8,7 +8,8 @@
 #include "binTree.h"
 
 template <class T, class Compare>
-class SplayTree:BinTree{
+class SplayTree: public BinTree<T,Compare>{
+struct TreeNode;
 private:
     //the rolls used in the splay
     //when t's parent is the root and t is a left son
@@ -27,20 +28,19 @@ private:
     void splay(TreeNode* t);
 
 public:
-    SplayTree(Compare c):BinTree(c){}
-    SplayTree():BinTree(){}
+    SplayTree():BinTree<T,Compare>(){}
 
     //find node with relevant info. returns NULL if there is none
-    T* find(T& info) override;
+    T* find(T& info);
 
     //find node with highest info value the tree. returns NULL if there is none
-    T* findMax() override;
+    T* findMax();
 
     //find node with lowest info value the tree. returns NULL if there is none
-    T* findMin() override;
+    T* findMin();
 
     //insert node with relevant info. returns NULL if there it already exists
-    void insert(T& info) override;
+    void insert(T& info);
 
 //    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
 //    bool remove(T& info) override;
@@ -60,7 +60,7 @@ T* SplayTree<T, Compare>::find(T& info){
     }
 
     //find the node or the closest one in value if it does not exist
-    TreeNode* found = findNode(info);
+    TreeNode* found = findNode(info, root);
 
     //move the found node to the root
     splay(found);
@@ -82,7 +82,7 @@ T* SplayTree<T, Compare>::findMax() {
     }
 
     //find the max node
-    TreeNode* max_node = findMax();
+    TreeNode* max_node = findMinNode(root);
 
     //move the max node to the root
     splay(max_node);
@@ -99,7 +99,7 @@ T* SplayTree<T, Compare>::findMin() {
     }
 
     //find the min node
-    TreeNode* min_node = findMin();
+    TreeNode* min_node = findMinNode(root);
 
     //move the min node to the root
     splay(min_node);
