@@ -89,13 +89,16 @@ protected:
 
     //the recursive functions that run a function recursively in a certain order
     template <typename Func>
-    void recursiveInorder(TreeNode* p, Func func);
+    void recursiveInorder(TreeNode* p, Func& func);
 
     template <typename Func>
-    void recursivePreorder(TreeNode* p, Func func);
+    void recursivePreorder(TreeNode* p, Func& func);
 
     template <typename Func>
-    void recursivePostorder(TreeNode* p, Func func);
+    void recursivePostorder(TreeNode* p, Func& func);
+
+    template <typename Func>
+    void recursiveInverseOrder(TreeNode* p, Func& func);
 
 public:
     //normal constructor
@@ -133,13 +136,16 @@ public:
 
     //different orders to run a function on the tree's nodes
     template <typename Func>
-    void Inorder(Func func);
+    void Inorder(Func& func);
 
     template <typename Func>
-    void Preorder(Func func);
+    void Preorder(Func& func);
 
     template <typename Func>
-    void Postorder(Func func);
+    void Postorder(Func& func);
+
+    template <typename Func>
+    void InverseOrder(Func& func);
 };
 
 template<class T, class Compare>
@@ -346,12 +352,12 @@ void BinTree<T, Compare>::removeAllNodesAndDeleteInfo(TreeNode* p) {
 }
 
 template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::Inorder(Func func) {
+void BinTree<T, Compare>::Inorder(Func& func) {
     recursiveInorder(root, func);
 }
 
 template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func func) {
+void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func& func) {
     if (p == NULL){
         return;
     }
@@ -364,12 +370,12 @@ void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func func) {
 }
 
 template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::Postorder(Func func) {
+void BinTree<T, Compare>::Postorder(Func& func) {
     recursivePostorder(root, func);
 }
 
 template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func func) {
+void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func& func) {
     if (p == NULL){
         return;
     }
@@ -382,12 +388,12 @@ void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func func) {
 }
 
 template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::Preorder(Func func) {
+void BinTree<T, Compare>::Preorder(Func& func) {
     recursivePreorder(root, func);
 }
 
 template<class T, class Compare, typename Func>
-void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func func) {
+void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func& func) {
     if (p == NULL){
         return;
     }
@@ -397,6 +403,24 @@ void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func func) {
     recursivePreorder(p->left, func);
 
     recursivePreorder(p->right, func);
+}
+
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::InverseOrder(Func& func){
+    recursiveInverseOrder(root, func);
+}
+
+template<class T, class Compare, typename Func>
+void BinTree<T, Compare>::recursiveInverseOrder(TreeNode* p, Func& func) {
+    if (p == NULL){
+        return;
+    }
+
+    recursiveInverseOrder(p->right, func);
+
+    func(p->info);
+
+    recursiveInverseOrder(p->left, func);
 }
 
 #endif //DS_WET_2_BINTREE_H
