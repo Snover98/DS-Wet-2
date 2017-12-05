@@ -7,26 +7,26 @@
 
 #include <clocale>
 #include "splayTree.h"
+#include "CompGlads.h"
 
 class Gladiator;
-class CompGladsByLevel;
 
 class Trainer{
     private:
     int ID;
     int num_of_gladiators;
     Gladiator* top_gladiator;
-    SplayTree<Gladiator, CompGladsByLevel> gladiators;
+    SplayTree<Gladiator> gladiators;
 
     public:
     //class functions
-    Trainer(int id);
+    Trainer(int id = 0);
 
     //getters
     int getID() const;
     int getNumOfGladiators() const;
     Gladiator* getTopGladiator() const;
-    SplayTree<Gladiator, CompGladsByLevel>& getGladiators();
+    SplayTree<Gladiator>& getGladiators();
 
     //other functions
     //addGladiator

@@ -244,14 +244,14 @@ List<T>::List() : _tail(new Node()) {
     _head = _tail;
 }
 
-template <class T>
-List<T>::List(const List<T> &list) :  List() {
-    List<T>::Iterator it = list.begin();
-    while (it != list.end()) {
-        (*this).insert(*it);
-        it++;
-    }
-}
+//template <class T>
+//List<T>::List(const List<T> &list) :  List() {
+//    List<T>::Iterator it = list.begin();
+//    while (it != list.end()) {
+//        (*this).insert(*it);
+//        it++;
+//    }
+//}
 
 template <class T>
 List<T>::~List() {

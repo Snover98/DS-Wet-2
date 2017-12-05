@@ -2,64 +2,58 @@
 #define DS_WET_2_BINTREE_H
 
 #include "genericFunction.h"
+#include "TreeNode.h"
 
-template<class T, class Compare>
+template<class T>
 class BinTree {
 protected:
-    //node struct
-    struct TreeNode {
-        TreeNode* parent;
-        TreeNode* left;
-        TreeNode* right;
-        T& info;
-    };
     //tree root
-    TreeNode* root;
+    TreeNode<T>* root;
+
+    //comparison function
+    Compare<T>& comp;
 
     /* * * * * * * * * * * * *\
     |* CLASS INNER FUNCTIONS *|
     \* * * * * * * * * * * * */
     //switch the info of two nodes
-    void switchNodes(TreeNode* t1, TreeNode* t2);
+    void switchNodes(TreeNode<T>* t1, TreeNode<T>* t2);
 
     //find the node with the inputted info. returns the closest node if the info is not in the tree
-    TreeNode* findNode(T& info, TreeNode* start);
+    TreeNode<T>* findNode(T& info, TreeNode<T>* start);
 
     //find the maximal node of the sub-tree start
-    TreeNode* findMaxNode(TreeNode* start);
+    TreeNode<T>* findMaxNode(TreeNode<T>* start);
 
     //find the minimal node of the sub-tree start
-    TreeNode* findMinNode(TreeNode* start);
+    TreeNode<T>* findMinNode(TreeNode<T>* start);
 
     //insert a node into the sub-tree 'start'
-    TreeNode* insertNode(TreeNode* t, TreeNode* start);
+    TreeNode<T>* insertNode(TreeNode<T>* t, TreeNode<T>* start);
     //insert info into the tree and return it's node
-    TreeNode* insertInfo(T& info);
+    TreeNode<T>* insertInfo(T& info);
 
     //remove a node
-    void removeNode(TreeNode* t);
+    void removeNode(TreeNode<T>* t);
     
     //removing all nodes + deleting all inner info
-    void removeAllNodesAndDeleteInfo(TreeNode* p);
+    void removeAllNodesAndDeleteInfo(TreeNode<T>* p);
 
     //removing all nodes without deleting the info inside the nodes
-    void removeAllNodes(TreeNode* p);
+    void removeAllNodes(TreeNode<T>* p);
 
     //the recursive functions that run a function recursively in a certain order (regarding all the orders)
-    void recursiveInorder(TreeNode* p, Func<T>& func);
+    void recursiveInorder(TreeNode<T>* p, Func<T>& func);
 
-    void recursivePreorder(TreeNode* p, Func<T>& func);
+    void recursivePreorder(TreeNode<T>* p, Func<T>& func);
 
-    void recursivePostorder(TreeNode* p, Func<T>& func);
+    void recursivePostorder(TreeNode<T>* p, Func<T>& func);
 
-    void recursiveInverseOrder(TreeNode* p, Func<T>& func);
-    
-    //comparsion function between the nodes in the search tree
-    int comp(T& t1, T& t2);
+    void recursiveInverseOrder(TreeNode<T>* p, Func<T>& func);
 
 public:
     //normal constructor
-    BinTree() : root(NULL) {}
+    BinTree(Compare<T>& c) : root(NULL), comp(c) {}
 
     ~BinTree();
 
@@ -99,25 +93,20 @@ public:
     void InverseOrder(Func<T>& func);
 };
 
-template<class T, class Compare>
-BinTree<T, Compare>::~BinTree(){
+template<class T>
+BinTree<T>::~BinTree(){
     removeAll();
 }
 
-template<class T, class Compare>
-int BinTree<T, Compare>::comp(T& t1, T& t2){
-    return Compare::operator()(t1, t2);
-}
-
-template<class T, class Compare>
-T* BinTree<T, Compare>::find(T& info) {
+template<class T>
+T* BinTree<T>::find(T& info) {
     //check if the tree is empty
     if(isEmpty()){
         return NULL;
     }
 
     //search for a node with the info
-    TreeNode* found = findNode(info, root);
+    TreeNode<T>* found = findNode(info, root);
 
     if(comp(found->info, info) == 0){//if the found node was the correct one
         return &(found->info);
@@ -127,8 +116,8 @@ T* BinTree<T, Compare>::find(T& info) {
     return NULL;
 }
 
-template<class T, class Compare>
-T* BinTree<T, Compare>::findMax() {
+template<class T>
+T* BinTree<T>::findMax() {
     //check if the tree is empty
     if(isEmpty()){
         return NULL;
@@ -136,8 +125,8 @@ T* BinTree<T, Compare>::findMax() {
     return &(findMaxNode(root)->info);
 }
 
-template<class T, class Compare>
-T* BinTree<T, Compare>::findMin() {
+template<class T>
+T* BinTree<T>::findMin() {
     //check if the tree is empty
     if(isEmpty()){
         return NULL;
@@ -145,21 +134,21 @@ T* BinTree<T, Compare>::findMin() {
     return &(findMinNode(root)->info);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::insert(T& info) {
+template<class T>
+void BinTree<T>::insert(T& info) {
     //use the inner function
     insertInfo(info);
 }
 
-template<class T, class Compare>
-bool BinTree<T, Compare>::remove(T& info) {
+template<class T>
+bool BinTree<T>::remove(T& info) {
     //the info cannot be in the tree if it's empty
     if(isEmpty()) {
         return false;
     }
 
     //find the node
-    TreeNode* t = findNode(info, root);
+    TreeNode<T>* t = findNode(info, root);
 
     //if the info is not in the tree
     if(comp(info, t->info) != 0){
@@ -171,14 +160,14 @@ bool BinTree<T, Compare>::remove(T& info) {
     return true;
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::removeAll() {
+template<class T>
+void BinTree<T>::removeAll() {
     removeAllNodes(root);
     root = NULL;
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::removeAllNodes(TreeNode* p) {
+template<class T>
+void BinTree<T>::removeAllNodes(TreeNode<T>* p) {
     if (p == NULL){
         return;
     }
@@ -190,14 +179,14 @@ void BinTree<T, Compare>::removeAllNodes(TreeNode* p) {
     delete p;
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::removeAllAndDeleteInfo() {
+template<class T>
+void BinTree<T>::removeAllAndDeleteInfo() {
     removeAllNodes(root);
     root = NULL;
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::removeAllNodesAndDeleteInfo(TreeNode* p) {
+template<class T>
+void BinTree<T>::removeAllNodesAndDeleteInfo(TreeNode<T>* p) {
     if(p == NULL){
         return;
     }
@@ -210,13 +199,13 @@ void BinTree<T, Compare>::removeAllNodesAndDeleteInfo(TreeNode* p) {
     delete p;
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::Inorder(Func<T>& func) {
+template<class T>
+void BinTree<T>::Inorder(Func<T>& func) {
     recursiveInorder(root, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func<T>& func) {
+template<class T>
+void BinTree<T>::recursiveInorder(TreeNode<T>* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -228,13 +217,13 @@ void BinTree<T, Compare>::recursiveInorder(TreeNode* p, Func<T>& func) {
     recursiveInorder(p->right, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::Postorder(Func<T>& func) {
+template<class T>
+void BinTree<T>::Postorder(Func<T>& func) {
     recursivePostorder(root, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func<T>& func) {
+template<class T>
+void BinTree<T>::recursivePostorder(TreeNode<T>* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -246,13 +235,13 @@ void BinTree<T, Compare>::recursivePostorder(TreeNode* p, Func<T>& func) {
     func(p->info);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::Preorder(Func<T>& func) {
+template<class T>
+void BinTree<T>::Preorder(Func<T>& func) {
     recursivePreorder(root, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func<T>& func) {
+template<class T>
+void BinTree<T>::recursivePreorder(TreeNode<T>* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -264,13 +253,13 @@ void BinTree<T, Compare>::recursivePreorder(TreeNode* p, Func<T>& func) {
     recursivePreorder(p->right, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::InverseOrder(Func<T>& func){
+template<class T>
+void BinTree<T>::InverseOrder(Func<T>& func){
     recursiveInverseOrder(root, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::recursiveInverseOrder(TreeNode* p, Func<T>& func) {
+template<class T>
+void BinTree<T>::recursiveInverseOrder(TreeNode<T>* p, Func<T>& func) {
     if (p == NULL){
         return;
     }
@@ -282,16 +271,16 @@ void BinTree<T, Compare>::recursiveInverseOrder(TreeNode* p, Func<T>& func) {
     recursiveInverseOrder(p->left, func);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::switchNodes(TreeNode *t1, TreeNode *t2) {
+template<class T>
+void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
     T& old_t1_info = t1->info;
     t1->info = t2->info;
     t2->info = old_t1_info;
 }
 
-template<class T, class Compare>
-typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findNode(T &info, TreeNode *start){
-    TreeNode* curr = start;
+template<class T>
+TreeNode<T>* BinTree<T>::findNode(T &info, TreeNode<T> *start){
+    TreeNode<T>* curr = start;
 
     while(curr != NULL) {
         //if this is the node
@@ -317,13 +306,13 @@ typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findNode(T &info, T
     return NULL;
 }
 
-template<class T, class Compare>
-typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMaxNode(TreeNode *start){
+template<class T>
+TreeNode<T>* BinTree<T>::findMaxNode(TreeNode<T> *start){
     if(isEmpty()){
         return NULL;
     }
 
-    TreeNode* curr = start;
+    TreeNode<T>* curr = start;
 
     while (curr->right != NULL) {
         curr = curr->right;
@@ -331,13 +320,13 @@ typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMaxNode(TreeNod
     return curr;
 }
 
-template<class T, class Compare>
-typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMinNode(TreeNode *start){
+template<class T>
+TreeNode<T>* BinTree<T>::findMinNode(TreeNode<T> *start){
     if(isEmpty()){
         return NULL;
     }
 
-    TreeNode* curr = start;
+    TreeNode<T>* curr = start;
 
     while (curr->left != NULL) {
         curr = curr->left;
@@ -345,10 +334,10 @@ typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::findMinNode(TreeNod
     return curr;
 }
 
-template<class T, class Compare>
-typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertNode(TreeNode *t, TreeNode *start){
+template<class T>
+TreeNode<T>* BinTree<T>::insertNode(TreeNode<T> *t, TreeNode<T> *start){
     //find the closest node
-    TreeNode* closest = findNode(t->info, start);
+    TreeNode<T>* closest = findNode(t->info, start);
 
     //if the there is no node with the same info
     if(comp(t->info, closest->info) != 0){
@@ -371,14 +360,10 @@ typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertNode(TreeNode
     return t;
 }
 
-template<class T, class Compare>
-typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertInfo(T &info){
+template<class T>
+TreeNode<T>* BinTree<T>::insertInfo(T &info){
     //create the node
-    TreeNode* t = new TreeNode;
-    t->info = info;
-    t->left = NULL;
-    t->right = NULL;
-    t->parent = NULL;
+    TreeNode<T>* t = new TreeNode<T>(info);
 
     //If this is an empty tree
     if(isEmpty()) {
@@ -389,8 +374,8 @@ typename BinTree<T, Compare>::TreeNode* BinTree<T, Compare>::insertInfo(T &info)
     return insertNode(t, root);
 }
 
-template<class T, class Compare>
-void BinTree<T, Compare>::removeNode(TreeNode *t){
+template<class T>
+void BinTree<T>::removeNode(TreeNode<T> *t){
     //if the node is a leaf
     if(t->right == NULL && t->left == NULL){
         //remove the node from it's parent, if it has one
@@ -414,7 +399,7 @@ void BinTree<T, Compare>::removeNode(TreeNode *t){
     //if the node only has one child (if we got here we know that it has children)
     if(t->left == NULL || t->right == NULL) {
         //save the child
-        TreeNode *child = (t->left != NULL) ? t->left : t->right;
+        TreeNode<T> *child = (t->left != NULL) ? t->left : t->right;
 
         //replace the node with it's child in its parent, if it has one
         if(t->parent != NULL){
@@ -440,7 +425,7 @@ void BinTree<T, Compare>::removeNode(TreeNode *t){
 
     //if the node has 2 children (happens if we got here)
     //find the following node
-    TreeNode* t_follower = findMinNode(t->right);
+    TreeNode<T>* t_follower = findMinNode(t->right);
     //switch between them
     switchNodes(t, t_follower);
 

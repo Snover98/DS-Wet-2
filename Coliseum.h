@@ -15,9 +15,9 @@
 
 class Coliseum{
 private:
-    List<Trainer> trainersList;
-    SplayTree<Gladiator,CompGladsByID> splayGladsId;
-    SplayTree<Gladiator,CompGladsByLevel> splayGladsLvl;
+    List<Trainer>* trainersList;
+    SplayTree<Gladiator>& splayGladsId;
+    SplayTree<Gladiator>& splayGladsLvl;
     Gladiator* topGladiator;
     int gladiatorsNum;
 

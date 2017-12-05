@@ -11,4 +11,10 @@ public:
     virtual void operator()(T& t);
 };
 
+template<class T>
+class Compare{
+public:
+    virtual int operator()(T& t1, T& t2);
+};
+
 #endif //DS_WET_2_GENERICFUNCTION_H

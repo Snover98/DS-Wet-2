@@ -6,28 +6,29 @@
 #define DS_WET_2_SPLAYTREE_H
 
 #include "binTree.h"
+#include "TreeNode.h"
 
-template <class T, class Compare>
-class SplayTree: public BinTree<T,Compare>{
+template <class T>
+class SplayTree: public BinTree<T>{
 private:
     //the rolls used in the splay
     //when t's parent is the root and t is a left son
-    void zig(TreeNode* t);
+    void zig(TreeNode<T>* t);
     //when t's parent is the root and t is a right son
-    void zag(TreeNode* t);
+    void zag(TreeNode<T>* t);
     //t is the left son of a left son
-    void zigZig(TreeNode* t);
+    void zigZig(TreeNode<T>* t);
     //t is the right son of a right son
-    void zagZag(TreeNode* t);
+    void zagZag(TreeNode<T>* t);
     //t is the right son of a left son
-    void zigZag(TreeNode* t);
+    void zigZag(TreeNode<T>* t);
     //t is the left son of a right son
-    void zagZig(TreeNode* t);
+    void zagZig(TreeNode<T>* t);
     //the splay - moving a node to the root
-    void splay(TreeNode* t);
+    void splay(TreeNode<T>* t);
 
 public:
-    SplayTree():BinTree<T,Compare>(){}
+    SplayTree(Compare<T> c):BinTree<T>(c){}
 
     //find node with relevant info. returns NULL if there is none
     T* find(T& info);
@@ -51,37 +52,37 @@ public:
 //    SplayTree split(T& pivot);
 };
 
-template<class T, class Compare>
-T* SplayTree<T, Compare>::find(T& info){
+template<class T>
+T* SplayTree<T>::find(T& info){
     //if the tree is empty, return NULL
     if(this->isEmpty()){
         return NULL;
     }
 
     //find the node or the closest one in value if it does not exist
-    TreeNode* found = this->findNode(info, root);
+    TreeNode<T>* found = this->findNode(info, this->root);
 
     //move the found node to the root
     splay(found);
 
     //if it has the correct info, return it
-    if(found->info == info){
+    if(this->comp(info, found->info)){
         return &(found->info);
     }
 
     //otherwise, it was not found so return NULL
     return NULL;
-};
+}
 
-template<class T, class Compare>
-T* SplayTree<T, Compare>::findMax() {
+template<class T>
+T* SplayTree<T>::findMax() {
     //return NULL if the tree is empty
     if(this->isEmpty()){
         return NULL;
     }
 
     //find the max node
-    TreeNode* max_node = this->findMinNode(root);
+    TreeNode<T>* max_node = this->findMinNode(this->root);
 
     //move the max node to the root
     splay(max_node);
@@ -90,15 +91,15 @@ T* SplayTree<T, Compare>::findMax() {
     return &(max_node->info);
 }
 
-template<class T, class Compare>
-T* SplayTree<T, Compare>::findMin() {
+template<class T>
+T* SplayTree<T>::findMin() {
     //return NULL if the tree is empty
     if(this->isEmpty()){
         return NULL;
     }
 
     //find the min node
-    TreeNode* min_node = this->findMinNode(root);
+    TreeNode<T>* min_node = this->findMinNode(this->root);
 
     //move the min node to the root
     splay(min_node);
@@ -107,16 +108,16 @@ T* SplayTree<T, Compare>::findMin() {
     return &(min_node->info);
 }
 
-template<class T, class Compare>
-void SplayTree<T, Compare>::insert(T &info) {
+template<class T>
+void SplayTree<T>::insert(T &info) {
     //insert the info and splay the node
     splay(this->insertInfo(info));
 }
 
 //when t's parent is the root and t is a left son
-template<class T, class Compare>
-void SplayTree<T, Compare>::zig(TreeNode* t){
-    TreeNode* parent = t->parent;
+template<class T>
+void SplayTree<T>::zig(TreeNode<T>* t){
+    TreeNode<T>* parent = t->parent;
 
     //move t's right subtree to the parent
     t->right->parent = parent;
@@ -132,9 +133,9 @@ void SplayTree<T, Compare>::zig(TreeNode* t){
 }
 
 //when t's parent is the root and t is a right son
-template<class T, class Compare>
-void SplayTree<T, Compare>::zag(TreeNode* t){
-    TreeNode* parent = t->parent;
+template<class T>
+void SplayTree<T>::zag(TreeNode<T>* t){
+    TreeNode<T>* parent = t->parent;
 
     //move t's left subtree to the parent's right
     t->left->parent = parent;
@@ -149,10 +150,10 @@ void SplayTree<T, Compare>::zag(TreeNode* t){
 }
 
 //t is the left son of a left son
-template<class T, class Compare>
-void SplayTree<T, Compare>::zigZig(TreeNode* t){
-    TreeNode* parent = t->parent;
-    TreeNode* grand_parent = parent->parent;
+template<class T>
+void SplayTree<T>::zigZig(TreeNode<T>* t){
+    TreeNode<T>* parent = t->parent;
+    TreeNode<T>* grand_parent = parent->parent;
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
@@ -180,10 +181,10 @@ void SplayTree<T, Compare>::zigZig(TreeNode* t){
 }
 
 //t is the right son of a right son
-template<class T, class Compare>
-void SplayTree<T, Compare>::zagZag(TreeNode* t){
-    TreeNode* parent = t->parent;
-    TreeNode* grand_parent = parent->parent;
+template<class T>
+void SplayTree<T>::zagZag(TreeNode<T>* t){
+    TreeNode<T>* parent = t->parent;
+    TreeNode<T>* grand_parent = parent->parent;
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
@@ -211,10 +212,10 @@ void SplayTree<T, Compare>::zagZag(TreeNode* t){
 }
 
 //t is the right son of a left son
-template<class T, class Compare>
-void SplayTree<T, Compare>::zigZag(TreeNode* t){
-    TreeNode* parent = t->parent;
-    TreeNode* grand_parent = parent->parent;
+template<class T>
+void SplayTree<T>::zigZag(TreeNode<T>* t){
+    TreeNode<T>* parent = t->parent;
+    TreeNode<T>* grand_parent = parent->parent;
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
@@ -242,10 +243,10 @@ void SplayTree<T, Compare>::zigZag(TreeNode* t){
 }
 
 //t is the left son of a right son
-template<class T, class Compare>
-void SplayTree<T, Compare>::zagZig(TreeNode* t){
-    TreeNode* parent = t->parent;
-    TreeNode* grand_parent = parent->parent;
+template<class T>
+void SplayTree<T>::zagZig(TreeNode<T>* t){
+    TreeNode<T>* parent = t->parent;
+    TreeNode<T>* grand_parent = parent->parent;
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
@@ -273,8 +274,8 @@ void SplayTree<T, Compare>::zagZig(TreeNode* t){
 }
 
 //the splay - moving a node to the root
-template<class T, class Compare>
-void SplayTree<T, Compare>::splay(TreeNode* t){
+template<class T>
+void SplayTree<T>::splay(TreeNode<T>* t){
     //as long as t is not the root
     while(t->parent != NULL){
         if(t->parent->left == t){//if t is a left son
@@ -297,7 +298,7 @@ void SplayTree<T, Compare>::splay(TreeNode* t){
     }
 
     //update the root
-    root = t;
+    this->root = t;
 }
 
 

@@ -5,11 +5,11 @@
 #ifndef HW2_COMPGLADS_H
 #define HW2_COMPGLADS_H
 
-#include "Gladiator.h"
+#include "genericFunction.h"
 
-class CompGladsByID{
+template<class T>
+class CompGladsByID : public Compare<T>{
     public:
-    CompGladsByID() = default;
     /*****************COMPARISON************************
      * Compares the the inputted Gladiators by their IDs
      * return values:
@@ -17,13 +17,13 @@ class CompGladsByID{
      * if g1.id < g2.id, -1
      * if g1.id > g2.id, 1
      **************************************************/
-    virtual int operator()(Gladiator& g1, Gladiator& g2);
+    virtual int operator()(T& g1, T& g2);
     //works the same, just with an id and a gladiator
 };
 
-class CompGladsByLevel : public CompGladsByID{
+template<class T>
+class CompGladsByLevel : public CompGladsByID<T>{
 public:
-    CompGladsByLevel() = default;
     /*****************COMPARISON************************
      * Compares the the inputted Gladiators by their Levels.
      * If they have the same level, they are compared by id IN REVERSE
@@ -34,7 +34,7 @@ public:
      * if g1.level == g2.level and g1.id > g2.id, -1
      * if g1.level == g2.level and g1.id == g2.id, 0
      **************************************************/
-    int operator()(Gladiator& g1, Gladiator& g2) override;
+    int operator()(T& g1, T& g2);
 };
 
 
