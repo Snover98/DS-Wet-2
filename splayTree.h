@@ -208,9 +208,9 @@ public:
     //insert node with relevant info. returns NULL if there it already exists
     void insert(T& info) override;
 
-    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    bool remove(T& info) override;
-
+//    //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
+//    bool remove(T& info) override;
+//
 //    //join two trees, where every node in tree2 has a higher info value than those in this tree
 //    void join(SplayTree tree2);
 //
@@ -226,7 +226,7 @@ T* SplayTree<T, Compare>::find(T& info){
     }
 
     //find the node or the closest one in value if it does not exist
-    TreeNode* found = BinTree::findNode(info);
+    TreeNode* found = findNode(info);
 
     //move the found node to the root
     splay(found);
@@ -248,7 +248,7 @@ T* SplayTree<T, Compare>::findMax() {
     }
 
     //find the max node
-    TreeNode* max_node = BinTree::findMax();
+    TreeNode* max_node = findMax();
 
     //move the max node to the root
     splay(max_node);
@@ -265,7 +265,7 @@ T* SplayTree<T, Compare>::findMin() {
     }
 
     //find the min node
-    TreeNode* min_node = BinTree::findMin();
+    TreeNode* min_node = findMin();
 
     //move the min node to the root
     splay(min_node);
@@ -276,77 +276,67 @@ T* SplayTree<T, Compare>::findMin() {
 
 template<class T, class Compare>
 void SplayTree<T, Compare>::insert(T &info) {
-    //if the tree is empty, insert normally in the root
-    if(isEmpty()){
-        BinTree::insert(info);
-    }
+    //insert the info and splay the node
+    splay(insertInfo(info));
 
-    //create the node
-    TreeNode* t = new TreeNode;
-    t->info = info;
-    t->left = NULL;
-    t->right = NULL;
-    t->parent = NULL;
-
-
-    //move the closet node to the info into the root
-    //using split: this is the same as splitting the tree around info
-    T& closest_info = *find(info);
-
-    //everything to the left of the root should have lower info value than info,
-    //and everything to the right of the root should have higher info value than info,
-    //but we need to check the root itself
-    if(comp(info, root->info) <= 0){//if the root has an info value lower or equal to info's
-        t->left = root;     //put the root to the left of the info
-        root->parent = t;
-        t->right = root->right;
-        root->right = NULL;
-        t->right->parent = t;
-    } else{//if the root has an info value greater than info's
-        t->right = root;    //put the root to the right of the info
-        root->parent = t;
-        t->left = root->left;
-        root->left = NULL;
-        t->left->parent = t;
-    }
-
-    //update the root
-    root = t;
+//    //move the closet node to the info into the root
+//    //using split: this is the same as splitting the tree around info
+//    T& closest_info = *find(info);
+//
+//    //everything to the left of the root should have lower info value than info,
+//    //and everything to the right of the root should have higher info value than info,
+//    //but we need to check the root itself
+//    if(comp(info, root->info) <= 0){//if the root has an info value lower or equal to info's
+//        t->left = root;     //put the root to the left of the info
+//        root->parent = t;
+//        t->right = root->right;
+//        root->right = NULL;
+//        t->right->parent = t;
+//    } else{//if the root has an info value greater than info's
+//        t->right = root;    //put the root to the right of the info
+//        root->parent = t;
+//        t->left = root->left;
+//        root->left = NULL;
+//        t->left->parent = t;
+//    }
+//
+//    //update the root
+//    root = t;
 }
 
-template<class T, class Compare>
-bool SplayTree<T, Compare>::remove(T &info){
-    //if the tree is empty or the info is the root, just remove normally
-    if(isEmpty()){
-        return false;
-    }
-
-    //find the closest info
-    T& closest_info = *find(info);
-
-    //if the info is not in the tree, return false
-    if(comp(info, closest_info) != 0){
-        return false;
-    }
-
-    //split the tree around info
-    TreeNode* left_subtree = root->left;
-    TreeNode* right_subtree = root->right;
-    left_subtree->parent = NULL;
-    right_subtree->parent = NULL;
-    //delete the node with the info
-    root->left = NULL;
-    root->right = NULL;
-    delete root;
-    //find the max info in the left subtree, splay it and make it the root
-    root = left_subtree;//due to the implementation of splay, we will act as if the tree is only the left part for a bit
-    findMaxNode();  //this splays the max node in the left subtree
-    root->right = right_subtree;    //joins the subtree
-    right_subtree->parent = root;
-
-    //if the removal was successful, return true
-    return true;
-}
+//template<class T, class Compare>
+//bool SplayTree<T, Compare>::remove(T &info){
+//    //if the tree is empty or the info is the root, just remove normally
+//    if(isEmpty()){
+//        return false;
+//    }
+//
+//    //find the closest info
+//    T& closest_info = *find(info);
+//
+//    //if the info is not in the tree, return false
+//    if(comp(info, closest_info) != 0){
+//        return false;
+//    }
+//
+//    //split the tree around info
+//    TreeNode* left_subtree = root->left;
+//    TreeNode* right_subtree = root->right;
+//    left_subtree->parent = NULL;
+//    right_subtree->parent = NULL;
+//    //delete the node with the info
+//    root->left = NULL;
+//    root->right = NULL;
+//    delete root;
+//    //find the max info in the left subtree, splay it and make it the root
+//    root = left_subtree;//due to the implementation of splay, we will act as if the tree is only the left part for a bit
+//    findMaxNode();  //this splays the max node in the left subtree
+//    root->right = right_subtree;    //joins the subtree
+//    right_subtree->parent = root;
+//
+//    //if the removal was successful, return true
+//    return true;
+//}
 
 //template<class T, class Compare>
 //void SplayTree<T, Compare>::join(SplayTree tree2){
