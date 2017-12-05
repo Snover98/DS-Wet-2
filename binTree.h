@@ -161,7 +161,7 @@ public:
     virtual void insert(T& info);
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    virtual bool remove(T& info);
+    bool remove(T& info);
 
     //remove all nodes from binary tree
     void removeAll();
