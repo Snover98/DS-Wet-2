@@ -59,19 +59,20 @@ public:
 };
 
 Coliseum::Coliseum(): topGladiator(NULL), gladiatorsNum(0),
-                      splayGladsId(*(new SplayTree<Gladiator>(CompGladsByID<Gladiator>()))),
-                      splayGladsLvl(*(new SplayTree<Gladiator>(CompGladsByLevel<Gladiator>()))),
-                      trainersList(new List<Trainer>()){
-//    splayGladsId = *(new SplayTree<Gladiator>(comp_id));
-//    splayGladsLvl = *(new SplayTree<Gladiator>(comp_lv));
-//    trainersList = *(new List<Trainer>());
+                      splayGladsId(NULL), splayGladsLvl(NULL),
+                      trainersList(NULL){
+    CompGladsByID<Gladiator>* comp_id =  new CompGladsByID<Gladiator>();
+    CompGladsByLevel<Gladiator>* comp_lv = new CompGladsByLevel<Gladiator>();
+    splayGladsId = new SplayTree<Gladiator>(comp_id);
+    splayGladsLvl = new SplayTree<Gladiator>(comp_lv);
+    trainersList = new List<Trainer>();
 }
 
 Coliseum::~Coliseum() {
-    splayGladsId.removeAllAndDeleteInfo();
+    splayGladsId->removeAllAndDeleteInfo();
 
-    delete &splayGladsLvl;
-    delete &splayGladsLvl;
+    delete splayGladsLvl;
+    delete splayGladsLvl;
 
 //    List<Trainer>::Iterator it = trainersList->begin();
 //
@@ -129,7 +130,7 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
     Gladiator* new_gladiator = new Gladiator(gladiatorID,level,*(it));
 
     //check if it's already in
-    if(splayGladsId.find(*new_gladiator)){
+    if(splayGladsId->find(*new_gladiator)){
         delete new_gladiator;
         throw GladiatorAlreadyIn();
     }
@@ -140,8 +141,8 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
     }
 
     //add the gladiator to the trees
-    splayGladsId.insert(*new_gladiator);
-    splayGladsLvl.insert(*new_gladiator);
+    splayGladsId->insert(*new_gladiator);
+    splayGladsLvl->insert(*new_gladiator);
 
     //update the number of gladiators
     gladiatorsNum++;
@@ -150,7 +151,7 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
 void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
     //find the gladiator using a dummy with the same ID
     Gladiator dummy = Gladiator(gladiatorID);
-    Gladiator* glad = (splayGladsId.find(dummy));
+    Gladiator* glad = (splayGladsId->find(dummy));
 
     //if no gladiator was found
     if(glad == NULL){
@@ -183,10 +184,10 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
     }
 
     //remove the gladiator from the level tree
-    splayGladsLvl.remove(*glad);
+    splayGladsLvl->remove(*glad);
 
     //remove the gladiator from the ID tree
-    splayGladsId.remove(*glad);
+    splayGladsId->remove(*glad);
 
     //delete the gladiator and update the number of gladiators
     delete glad;
@@ -196,7 +197,7 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
 void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
     //find the gladiator using a dummy with the same ID
     Gladiator dummy = Gladiator(gladiatorID);
-    Gladiator* gladiator = splayGladsId.find(dummy);
+    Gladiator* gladiator = splayGladsId->find(dummy);
 
     //if no gladiator was found
     if(gladiator == NULL){
@@ -204,14 +205,14 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
     }
 
     //remove the gladiator from the trees sorted by level
-    splayGladsLvl.remove(*gladiator);
+    splayGladsLvl->remove(*gladiator);
     gladiator->getTrainer().getGladiators().remove(*gladiator);
 
     //change the gladiator's level
     gladiator->setLevel(gladiator->getLevel()+levelIncrease);
 
     //put hum back in the level trees
-    splayGladsLvl.insert(*gladiator);
+    splayGladsLvl->insert(*gladiator);
     gladiator->getTrainer().getGladiators().insert(*gladiator);
 }
 
@@ -259,7 +260,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
         //put the gladiators in the array
         putGladiatorsIdsIntoArray<Gladiator> put_ids = putGladiatorsIdsIntoArray<Gladiator>(*numOfGladiator,
                                                                                             *gladiators);
-        splayGladsLvl.InverseOrder(put_ids);
+        splayGladsLvl->InverseOrder(put_ids);
     } else {
         List<Trainer>::Iterator it = trainersList->begin();
 
@@ -297,13 +298,13 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
 void Coliseum::UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID) {
     //check if the ID is already in use with the help of a dummy
     Gladiator dummy = Gladiator(upgradedID);
-    if(gladiatorID == upgradedID || splayGladsId.find(dummy) != NULL){
+    if(gladiatorID == upgradedID || splayGladsId->find(dummy) != NULL){
         throw GladiatorUpgradedIDAlreadyExist();
     }
 
     //find the gladiator we want to change using the dummy
     dummy.setID(gladiatorID);
-    Gladiator* gladiator = splayGladsId.find(dummy);
+    Gladiator* gladiator = splayGladsId->find(dummy);
 
     //check if there is a gladiator with that ID in the system
     if(gladiator == NULL){
@@ -311,16 +312,16 @@ void Coliseum::UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID) {
     }
 
     //remove the gladiator from the trees
-    splayGladsLvl.remove(*gladiator);
-    splayGladsId.remove(*gladiator);
+    splayGladsLvl->remove(*gladiator);
+    splayGladsId->remove(*gladiator);
     gladiator->getTrainer().removeGladiator(*gladiator);
 
     //update the gladiator's ID
     gladiator->setID(upgradedID);
 
     //put the gladiator back in the trees
-    splayGladsId.insert(*gladiator);
-    splayGladsLvl.insert(*gladiator);
+    splayGladsId->insert(*gladiator);
+    splayGladsLvl->insert(*gladiator);
     gladiator->getTrainer().addGladiator(*gladiator);
 }
 
@@ -365,7 +366,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator** arr1, int size1,
 
 void Coliseum::emptyLevelTrees(){
     //empty global level tree
-    splayGladsLvl.removeAll();
+    splayGladsLvl->removeAll();
 
     //for each trainer empty his level tree
     List<Trainer>::Iterator it = trainersList->begin();
@@ -385,7 +386,7 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     separateGladsByStimulantCode<Gladiator> separate =
             separateGladsByStimulantCode<Gladiator>(stimulated, unchanged, stimulantCode);
     //use the function in inverse order
-    splayGladsLvl.InverseOrder(separate);
+    splayGladsLvl->InverseOrder(separate);
 
     //get array sizes
     int num_stim = separate.getStimulatedNum();
@@ -404,7 +405,7 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
 
     //put the gladiators back in
     for(int i=0; i<gladiatorsNum; i++){
-        splayGladsLvl.insert(*sorted[i]);
+        splayGladsLvl->insert(*sorted[i]);
         //we do this because the actual trainer should not be changed
         sorted[i]->getTrainer().getGladiators().insert(*sorted[i]);
     }

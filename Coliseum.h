@@ -16,8 +16,8 @@
 class Coliseum{
 private:
     List<Trainer>* trainersList;
-    SplayTree<Gladiator>& splayGladsId;
-    SplayTree<Gladiator>& splayGladsLvl;
+    SplayTree<Gladiator>* splayGladsId;
+    SplayTree<Gladiator>* splayGladsLvl;
     Gladiator* topGladiator;
     int gladiatorsNum;
 

@@ -53,7 +53,7 @@ protected:
 
 public:
     //normal constructor
-    BinTree(Compare<T>& c) : root(NULL), comp(c) {}
+    BinTree(Compare<T>* c) : root(NULL), comp(*c) {}
 
     ~BinTree();
 
@@ -96,6 +96,7 @@ public:
 template<class T>
 BinTree<T>::~BinTree(){
     removeAll();
+    delete &comp;
 }
 
 template<class T>

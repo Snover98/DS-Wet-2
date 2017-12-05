@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 98)
 
 set(SOURCE_FILES
         mainSys.cpp
+        #main2.cpp
         linkedList.h
         Coliseum.h
         Coliseum.cpp

@@ -6,11 +6,14 @@
 #include "Gladiator.h"
 
 Trainer::Trainer(int id):ID(id), num_of_gladiators(0), top_gladiator(NULL),
-                gladiators(SplayTree<Gladiator>(CompGladsByLevel<Gladiator>())){}
+                gladiators(NULL){
+    CompGladsByLevel<Gladiator>* trainer_comp = new CompGladsByLevel<Gladiator>();
+    gladiators = new SplayTree<Gladiator>(trainer_comp);
+}
 
 void Trainer::addGladiator(Gladiator& gladiator) {
     //insert the gladiator and then increase the number of gladiators
-    gladiators.insert(gladiator);
+    gladiators->insert(gladiator);
     num_of_gladiators++;
 
     //check if the new gladiator has a higher level than the top gladiator
@@ -21,13 +24,13 @@ void Trainer::addGladiator(Gladiator& gladiator) {
 
 void Trainer::removeGladiator(Gladiator& g) {
     //if the gladiator was not there
-    if(!gladiators.remove(g)){
+    if(!gladiators->remove(g)){
         return;
     }
 
     //if g is the trainer's top gladiator, find the new one
     if((*top_gladiator).getID() == g.getID()) {
-        top_gladiator = gladiators.findMax();
+        top_gladiator = gladiators->findMax();
     }
 
     //update the number of gladiators
@@ -50,5 +53,5 @@ Gladiator* Trainer::getTopGladiator() const{
 }
 
 SplayTree<Gladiator>& Trainer::getGladiators(){
-    return this->gladiators;
+    return *(this->gladiators);
 };

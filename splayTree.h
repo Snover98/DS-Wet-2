@@ -28,7 +28,7 @@ private:
     void splay(TreeNode<T>* t);
 
 public:
-    SplayTree(Compare<T> c):BinTree<T>(c){}
+    SplayTree(Compare<T>* c):BinTree<T>(c){}
 
     //find node with relevant info. returns NULL if there is none
     T* find(T& info);

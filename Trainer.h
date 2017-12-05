@@ -16,7 +16,7 @@ class Trainer{
     int ID;
     int num_of_gladiators;
     Gladiator* top_gladiator;
-    SplayTree<Gladiator> gladiators;
+    SplayTree<Gladiator>* gladiators;
 
     public:
     //class functions
