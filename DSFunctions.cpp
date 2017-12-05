@@ -85,18 +85,19 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
     if(DS == NULL || gladiatorID == NULL || trainerID==0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
-
+    try {
     if(trainerID<0) {
         *gladiatorID = coliseum->GetTopGladiator().getID();
         return SUCCESS;
     }
-
-    try {
         *gladiatorID = coliseum->getTopGladiatorInTrainer(trainerID);
     } catch(std::bad_alloc& e) {
         return ALLOCATION_ERROR;
     } catch(TrainerNotFound& e) {
         return FAILURE;
+    } catch(ColiseumIsEmpty& e) {
+        *gladiatorID = -1;
+        return SUCCESS;
     }
 
     return SUCCESS;

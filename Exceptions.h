@@ -32,6 +32,10 @@ namespace DSExceptions {
     public:
         GladiatorUpgradedIDAlreadyExist() : std::runtime_error("Element is already in") {}
     };
+    class ColiseumIsEmpty : public std::runtime_error {
+    public:
+        ColiseumIsEmpty() : std::runtime_error("Element is already in") {}
+    };
 
 }
 

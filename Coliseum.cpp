@@ -73,12 +73,12 @@ Coliseum::~Coliseum() {
     delete &splayGladsLvl;
     delete &splayGladsLvl;
 
-//    List<Trainer>::Iterator it = trainersList.begin();
+//    List<Trainer>::Iterator it = trainersList->begin();
 //
-//    while(it != trainersList.end()){
+//    while(it != trainersList->end()){
 //        (*it).getGladiators().removeAll();
-//        trainersList.remove(it);
-//        it=trainersList.begin();
+//        trainersList->remove(it);
+//        it=trainersList->begin();
 //    }
 
     delete trainersList;
@@ -93,8 +93,14 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
 
     //find where the trainer should be
     List<Trainer>::Iterator it = trainersList->begin();
-    while((*it).getID()<trainerID){
-        it++;
+    while(it != trainersList->end() && (*it).getID()<trainerID){
+        ++it;
+    }
+
+    //if we got to the end of the list - the trainer is not found, so we add him
+    if(it == trainersList->end()) {
+        trainersList->insert(Trainer(trainerID), it);
+        return;
     }
 
     //check if the trainer is already in
@@ -107,14 +113,15 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
 }
 
 void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level) {
+
     //find the gladiator's trainer
     List<Trainer>::Iterator it = trainersList->begin();
-    while((*it).getID()<trainerID){
-        it++;
+    while(it != trainersList->end() && (*it).getID()<trainerID){
+        ++it;
     }
 
     //if the trainer was not found
-    if(it==trainersList->end()){
+    if(it==trainersList->end() || (*it).getID()>trainerID){
         throw TrainerNotFound();
     }
 
@@ -123,11 +130,12 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
 
     //check if it's already in
     if(splayGladsId.find(*new_gladiator)){
+        delete new_gladiator;
         throw GladiatorAlreadyIn();
     }
 
     //check if the new gladiator has a higher level than the top gladiator
-    if(level>topGladiator->getLevel()){
+    if(topGladiator == NULL || level>topGladiator->getLevel()){
         topGladiator = new_gladiator;
     }
 
@@ -208,6 +216,8 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
 }
 
 Gladiator& Coliseum::GetTopGladiator() {
+    if(gladiatorsNum == 0)
+        throw ColiseumIsEmpty();
     return *topGladiator;
 }
 
@@ -217,6 +227,7 @@ int Coliseum::getGladiatorsNum() {
 
 
 int Coliseum::getTopGladiatorInTrainer(int trainerID) {
+
     List<Trainer>::Iterator it = trainersList->begin();
 
     while(it != trainersList->end()){
@@ -227,6 +238,7 @@ int Coliseum::getTopGladiatorInTrainer(int trainerID) {
                 return (*it).getTopGladiator()->getID();
             }
         }
+        ++it;
     }
 
     throw TrainerNotFound();
@@ -275,6 +287,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                     return;
                 }
             }
+            ++it;
         }
 
         throw TrainerNotFound();

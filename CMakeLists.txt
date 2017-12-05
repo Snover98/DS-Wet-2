@@ -21,5 +21,7 @@ set(SOURCE_FILES
         binTree.h
         genericFunction.h
         TreeNode.h
+        genericFunction.h
+        TreeNode.h
         )
 add_executable(DS-Wet-2 ${SOURCE_FILES})
