@@ -19,5 +19,7 @@ set(SOURCE_FILES
         Trainer.h
         Trainer.cpp
         binTree.h
+        genericFunction.h
+        TreeNode.h
         )
 add_executable(DS-Wet-2 ${SOURCE_FILES})

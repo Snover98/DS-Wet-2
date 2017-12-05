@@ -10,6 +10,6 @@ using namespace std;
 
 
 int main() {
-    void* s = Init();
+//    void* s = Init();
     return 0;
 }

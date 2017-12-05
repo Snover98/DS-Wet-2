@@ -5,6 +5,8 @@
 #ifndef DS_WET_2_TREENODE_H
 #define DS_WET_2_TREENODE_H
 
+#include <clocale>
+
 //node struct
 template<class T>
 struct TreeNode {

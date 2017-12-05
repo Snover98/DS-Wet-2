@@ -17,7 +17,13 @@ class CompGladsByID : public Compare<T>{
      * if g1.id < g2.id, -1
      * if g1.id > g2.id, 1
      **************************************************/
-    virtual int operator()(T& g1, T& g2);
+    virtual int operator()(T& g1, T& g2) {
+        if(g1.getID() == g2.getID()){
+            return 0;
+        }
+
+        return (g1.getID() < g2.getID())? -1: 1;
+    }
     //works the same, just with an id and a gladiator
 };
 
@@ -34,7 +40,13 @@ public:
      * if g1.level == g2.level and g1.id > g2.id, -1
      * if g1.level == g2.level and g1.id == g2.id, 0
      **************************************************/
-    int operator()(T& g1, T& g2);
+    int operator()(T &g1, T& g2) {
+        if(g1.getLevel() == g2.getLevel()){
+            return (-1)*CompGladsByID<T>::operator()(g1, g2);
+        }
+
+        return (g1.getLevel() < g2.getLevel())? -1: 1;
+    }
 };
 
 

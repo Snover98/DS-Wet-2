@@ -8,13 +8,17 @@
 template<class T>
 class Func{
 public:
-    virtual void operator()(T& t);
+    virtual void operator()(T& t){
+        return;
+    }
 };
 
 template<class T>
 class Compare{
 public:
-    virtual int operator()(T& t1, T& t2);
+    virtual int operator()(T& t1, T& t2){
+        return 0;
+    };
 };
 
 #endif //DS_WET_2_GENERICFUNCTION_H
