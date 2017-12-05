@@ -19,6 +19,13 @@ protected:
     /* * * * * * * * * * * * *\
     |* CLASS INNER FUNCTIONS *|
     \* * * * * * * * * * * * */
+    //switch the info of two nodes
+    void switchNodes(TreeNode* t1, TreeNode* t2){
+        T& old_t1_info = t1->info;
+        t1->info = t2->info;
+        t2->info = old_t1_info;
+    }
+
     //find the node with the inputted info. returns the closest node if the info is not in the tree
     TreeNode* findNode(T& info, TreeNode* start = root){
         TreeNode* curr = start;
@@ -47,7 +54,7 @@ protected:
         return NULL;
     }
 
-    //find the maximal node of the search tree
+    //find the maximal node of the sub-tree start
     TreeNode* findMaxNode(TreeNode* start=root){
         if(isEmpty()){
             return NULL;
@@ -61,7 +68,7 @@ protected:
         return curr;
     }
 
-    //find the minimal node of the search tree
+    //find the minimal node of the sub-tree start
     TreeNode* findMinNode(TreeNode* start=root){
         if(isEmpty()){
             return NULL;
@@ -75,6 +82,7 @@ protected:
         return curr;
     }
 
+    //insert a node into the sub-tree 'start'
     TreeNode* insertNode(TreeNode* t, TreeNode* start=root){
         //find the closest node
         TreeNode* closest = findNode(t->info, start);
@@ -99,7 +107,7 @@ protected:
         //return the node
         return t;
     }
-
+    //insert info into the tree and return it's node
     TreeNode* insertInfo(T& info){
         //create the node
         TreeNode* t = new TreeNode;
@@ -115,6 +123,65 @@ protected:
         }
 
         return insertNode(t);
+    }
+
+    //remove a node
+    void removeNode(TreeNode* t){
+        //if the node is a leaf
+        if(t->right == NULL && t->left == NULL){
+            //remove the node from it's parent, if it has one
+            if(t->parent != NULL){
+                if(t->parent->left == t){
+                    t->parent->left = NULL;
+                } else {
+                    t->parent->right = NULL;
+                }
+            } else {
+                root = NULL;
+            }
+
+            //delete the node
+            t->parent = NULL;
+            delete t;
+
+            return;
+        }
+
+        //if the node only has one child (if we got here we know that it has children)
+        if(t->left == NULL || t->right == NULL) {
+            //save the child
+            TreeNode *child = (t->left != NULL) ? t->left : t->right;
+
+            //replace the node with it's child in its parent, if it has one
+            if(t->parent != NULL){
+                if (t->parent->left == t) {
+                    t->parent->left = child;
+                } else {
+                    t->parent->right = child;
+                }
+            } else {
+                root = child;
+            }
+
+            child->parent = t->parent;
+
+            //delete the node
+            t->left = NULL;
+            t->right = NULL;
+            t->parent = NULL;
+            delete t;
+
+            return;
+        }
+
+        //if the node has 2 children (happens if we got here)
+        //find the following node
+        TreeNode* t_follower = findMinNode(t->right);
+        //switch between them
+        switchNodes(t, t_follower);
+
+        //now t_follower points to t's original info, so we'll just delete it instead
+        removeNode(t_follower);
     }
     
     //removing all nodes + deleting all inner info
@@ -244,112 +311,17 @@ bool BinTree<T, Compare>::remove(T& info) {
         return false;
     }
 
-    TreeNode* curr = findNode(info);
-    
-    //in case we are trying to remove the root
-    if(curr == root) {
-        //delete the original root and save it's children
-        TreeNode* tempLeft = curr->left;
-        TreeNode* tempRight = curr->right;
-        delete curr;
-        
-        //put the root to be the minimum leaf of the right sub tree of the original root
-        root = findMinNode(tempRight);
-        
-        //if the original root had no right child
-        if(root==NULL) {
-            //the new root is the left child of the old root
-            root = tempLeft;
-            tempLeft->parent = NULL;
-        } else {//if the original root had a right child
-            if(root != tempRight) { //if the right child of the root had a left child
-                root->parent->left = NULL; 
-                root->right = tempRight;
-            } 
-            root->parent=NULL;
-            //in this case, the left child of the old root is still the left child of the new root
-            root->left = tempLeft; 
-        }
-        return true;
-    }
+    //find the node
+    TreeNode* t = findNode(info);
 
-    //if there is no node with that info in the tree
-    if(curr == NULL || comp(info, curr->info) != 0){
+    //if the info is not in the tree
+    if(comp(info, t->info) != 0){
         return false;
     }
 
-    TreeNode* new_parent = curr->parent;
-
-    //if curr only has a right son
-    if(curr->left == NULL && curr->right != NULL) {
-        //if the left node of the parent is the current node
-        if(new_parent->left == curr) {
-            new_parent->left = curr->right;
-            curr->right->parent = new_parent;
-        } else{//if the right node of the parent is the current node
-            new_parent->right = curr->right;
-            curr->left->parent = new_parent;
-        }
-        delete curr;
-        return true;
-    }
-
-    //if there is only a left son
-    if(curr->left != NULL && curr->right == NULL) {
-        //if the left node of the parent is the current node
-        if(new_parent->left == curr) {
-            new_parent->left = curr->left;
-            curr->left->parent = new_parent;
-        } else{//if the right node of the parent is the current node
-            new_parent->right = curr->left;
-            curr->left->parent = new_parent;
-        }
-        delete curr;
-        return true;
-    }
-
-    //if its a leaf node with no sons, we just delete it
-    if (curr->left == NULL && curr->right == NULL) {
-        if (new_parent->left == curr) {
-            new_parent->left = NULL;
-        } else {
-            new_parent->right = NULL;
-        }
-        delete curr;
-        return true;
-    }
-
-    //if it's a node with 2 children:
-    //replace the current node with the smallest node in its right subtree
-    if (curr->left != NULL && curr->right != NULL) {
-        //if the current right son is a leaf, replace it with the current node
-        if (curr->right == NULL && curr->left == NULL) {
-            curr->info = curr->right->info;
-            delete curr->right;
-            curr->right = NULL;
-        } else { //right son has children
-            //if the current right child has a left child
-            if (curr->right->left != NULL) {
-                TreeNode* leftest = curr->right->left;
-                while (leftest->left != NULL) {
-                    leftest = leftest->left;
-                }
-                curr->info = leftest->info;
-                leftest->parent->left = leftest->parent->right;
-                delete leftest;
-            } else {
-                TreeNode* temp = curr->right;
-                curr->info = temp->info;
-                curr->right = temp->right;
-                temp->right->parent = curr->right;
-                delete temp;
-            }
-        }
-        return true;
-    }
-
-    //if none of the above happened, the info isn't in the tree
-    return false;
+    //remove t
+    removeNode(t);
+    return true;
 }
 
 template<class T, class Compare>
