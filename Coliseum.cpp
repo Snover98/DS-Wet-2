@@ -72,7 +72,7 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
     }
 
     //check if the trainer is already in
-    if((*it).getID()==trainerID) {
+    if((*it).getID() == trainerID) {
         throw TrainerAlreadyIn();
     }
 
@@ -80,6 +80,8 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
     trainersList.insert(Trainer(trainerID), it);
 }
 
+Coliseum::Coliseum(): trainersList(), splayGladsId(SplayTree<Gladiator,CompGladsByID>(CompGladsByID())),
+                      splayGladsLvl(SplayTree<Gladiator,CompGladsByLevel>()), topGladiator(NULL), gladiatorsNum(0) {}
 
 void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level) {
     //find the gladiator's trainer
@@ -219,7 +221,8 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
             throw std::bad_alloc();
         }
         //put the gladiators in the array
-        splayGladsLvl.InverseOrder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
+        putGladiatorsIdsIntoArray put_ids = putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators);
+        splayGladsLvl.InverseOrder(put_ids);
     } else {
         List<Trainer>::Iterator it = trainersList.begin();
 
@@ -241,7 +244,8 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                         throw std::bad_alloc();
                     }
                     //put the gladiators in the array
-                    (*it).getGladiators().InverseOrder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
+                    putGladiatorsIdsIntoArray put_ids = putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators);
+                    (*it).getGladiators().InverseOrder(put_ids);
                     return;
                 }
             }
@@ -290,10 +294,11 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
 
     //iterate on both arrays
     for(i=0; i<(size1+size2);i++) {
-        //if one of the arrays is empty
+        //if one of the arrays has been fully done
         if(arr1Counter == (size1-1) || arr2Counter == (size2-1)){
             break;
         }
+
         if(CompGladsByLevel::operator()(arr1[arr1Counter], arr2[arr2Counter]) <= 0){
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;
@@ -303,7 +308,8 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
         }
     }
 
-    while(arr1Counter < size1 || (arr2Counter < size2) {
+    //until the remaining array is done
+    while(arr1Counter < size1 || arr2Counter < size2) {
         if(arr1Counter < (size1-1)) {
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;

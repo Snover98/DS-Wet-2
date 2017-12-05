@@ -24,8 +24,7 @@ private:
     void emptyLevelTrees();
 public:
     //// Constructs a new Coliseum
-    Coliseum(): trainersList(), splayGladsId(SplayTree<Gladiator,CompGladsByID>(CompGladsByID())),
-                splayGladsLvl(SplayTree<Gladiator,CompGladsByLevel>()), topGladiator(NULL), gladiatorsNum(0) {}
+    Coliseum();
     ~Coliseum();
 
     void AddTrainerToColiseum(int trainerID);
