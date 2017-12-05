@@ -14,8 +14,8 @@ protected:
     };
     TreeNode* root;
 
-    TreeNode* findNode(T& info, TreeNode* start = root){
-        TreeNode* curr = start;
+    TreeNode* findNode(T& info){
+        TreeNode* curr = root;
 
         while(curr != NULL) {
             //if this is the node
@@ -41,6 +41,7 @@ protected:
         return NULL;
     }
 
+    //find the maximal node of the search tree
     TreeNode* findMaxNode(){
         if(isEmpty()){
             return NULL;
@@ -54,6 +55,7 @@ protected:
         return curr;
     }
 
+    //find the minimal node of the search tree
     TreeNode* findMinNode(){
         if(isEmpty()){
             return NULL;
@@ -66,56 +68,14 @@ protected:
         }
         return curr;
     }
-
-    TreeNode* insertInfo(T& info){
-        //create a new node for the info
-        TreeNode *t = new TreeNode;
-        t->info = info;
-        t->left = NULL;
-        t->right = NULL;
-        t->parent = NULL;
-
-        //If this is an empty tree
-        if (isEmpty()) {
-            root = t;
-            return root;
-        }
-
-        return insertNode(t);
-    }
-
-    TreeNode* insertNode(TreeNode* t, TreeNode* start = root){
-        //find the closest node
-        TreeNode* closest = findNode(t->info, start);
-
-        //check if the info is already there
-        if(comp(t->info, closest->info) != 0) {
-            if (comp(t->info, closest->info) < 0) {//if the new node should be to the left of it
-                closest->left = t;
-            } else {//if the new node should be to the right of it
-                closest->right = t;
-            }
-            //set the node's parent
-            t->parent = closest;
-
-        //if a node with the info exists put the new one to the left of it
-        } else {
-            if(closest->left == NULL){//if it has no left son, t is the new left son
-                closest->left = t;
-                t->parent = closest;
-            } else{//otherwise, insert it to the left
-                return insertNode(t, closest->left);
-            }
-        }
-
-        return t;
-    }
-
+    
+    //removing all nodes + deleting all inner info
     void removeAllNodesAndDeleteInfo(TreeNode* p);
 
+    //removing all nodes without deleting the info inside the nodes
     void removeAllNodes(TreeNode* p);
 
-    //the recursive functions that run a function recursively in a certain order
+    //the recursive functions that run a function recursively in a certain order (regarding all the orders)
     template <typename Func>
     void recursiveInorder(TreeNode* p, Func& func);
 
@@ -127,7 +87,8 @@ protected:
 
     template <typename Func>
     void recursiveInverseOrder(TreeNode* p, Func& func);
-
+    
+    //comparsion function between the nodes in the search tree
     int comp(T& t1, T& t2);
 
 public:
@@ -152,7 +113,7 @@ public:
     virtual void insert(T& info);
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    bool remove(T& info);
+    virtual bool remove(T& info);
 
     //remove all nodes from binary tree
     void removeAll();
@@ -224,32 +185,41 @@ T* BinTree<T, Compare>::findMin() {
 
 template<class T, class Compare>
 void BinTree<T, Compare>::insert(T& info) {
-    //use the inner function
-    insertInfo(info);
-//
-//    TreeNode* new_parent = root;
-//    TreeNode* curr = root;
-//    //until the needed parent is found (should have it's relative child as NULL)
-//    while(curr != NULL) {
-//        new_parent = curr;
-//
-//        //if the info is less or equal, go right if possible
-//        if(comp(info, curr->info) >= 0) {
-//            curr = curr->right;
-//        } else {//else, go left if possible
-//            curr = curr->left;
-//        }
-//    }
-//
-//    //check if the new node is the left or right child
-//    if(comp(info, new_parent->info) < 0) {
-//        new_parent->left = t;
-//    } else {
-//        new_parent->right = t;
-//    }
-//
-//    //set the new node's parent
-//    t->parent = new_parent;
+    TreeNode* t = new TreeNode;
+    t->info = info;
+    t->left = NULL;
+    t->right = NULL;
+    t->parent = NULL;
+
+    //If this is a new tree
+    if(isEmpty()) {
+        root = t;
+        return;
+    }
+
+    TreeNode* new_parent = root;
+    TreeNode* curr = root;
+    //until the needed parent is found (should have it's relative child as NULL)
+    while(curr != NULL) {
+        new_parent = curr;
+
+        //if the info is less or equal, go right if possible
+        if(comp(info, curr->info) >= 0) {
+            curr = curr->right;
+        } else {//else, go left if possible
+            curr = curr->left;
+        }
+    }
+
+    //check if the new node is the left or right child
+    if(comp(info, new_parent->info) < 0) {
+        new_parent->left = t;
+    } else {
+        new_parent->right = t;
+    }
+
+    //set the new node's parent
+    t->parent = new_parent;
 }
 
 template<class T, class Compare>
@@ -260,9 +230,35 @@ bool BinTree<T, Compare>::remove(T& info) {
     }
 
     TreeNode* curr = findNode(info);
+    
+    //in case we are trying to remove the root
+    if(curr == root) {
+        TreeNode* tempLeft = curr->left;
+        TreeNode* tempRight = curr->right;
+        delete curr;
+        
+        //delete default - put the root to be the minimum leaf of the right sub tree of the original root
+        root = tempRight.findMin(); 
+        
+        //if the original root had no right child
+        if(root==NULL) {
+            //the new root is the left child of the old root
+            root = tempLeft;
+            tempLeft->parent = NULL;
+        } else {//if the original root had a right child
+            if(root != tempRight) { //if the right child of the root had a left child
+                root->parent->left = NULL; 
+                root->right = tempRight;
+            } 
+            root->parent=NULL;
+            //in this case, the left child of the old root is still the left child of the new root
+            root->left = tempLeft; 
+        }
+        return true;
+    }
 
     //if there is no node with that info in the tree
-    if(comp(info, curr->info) != 0){
+    if(curr == NULL || comp(info, curr->info) != 0){
         return false;
     }
 
