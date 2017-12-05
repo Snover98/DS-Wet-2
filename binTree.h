@@ -6,14 +6,19 @@ using namespace std;
 template<class T, class Compare>
 class BinTree {
 protected:
+    //node struct
     struct TreeNode {
         TreeNode* parent;
         TreeNode* left;
         TreeNode* right;
         T& info;
     };
+    //tree root
     TreeNode* root;
 
+    /* * * * * * * * * * * * *\
+    |* CLASS INNER FUNCTIONS *|
+    \* * * * * * * * * * * * */
     TreeNode* findNode(T& info, TreeNode* start = root){
         TreeNode* curr = start;
 

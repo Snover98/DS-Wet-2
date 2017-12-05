@@ -65,7 +65,9 @@ Coliseum::Coliseum(): topGladiator(NULL), gladiatorsNum(0) {
 
 Coliseum::~Coliseum() {
     splayGladsId.removeAllAndDeleteInfo();
-    splayGladsLvl.removeAll();
+
+    delete splayGladsLvl;
+    delete splayGladsLvl;
 
     List<Trainer>::Iterator it = trainersList.begin();
 
@@ -74,6 +76,8 @@ Coliseum::~Coliseum() {
         trainersList.remove(it);
         it=trainersList.begin();
     }
+
+    delete trainersList;
 }
 
 void Coliseum::AddTrainerToColiseum(int trainerID) {
@@ -273,7 +277,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
 void Coliseum::UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID) {
     //check if the ID is already in use with the help of a dummy
     Gladiator dummy = Gladiator(upgradedID);
-    if(splayGladsId.find(dummy) != NULL){
+    if(gladiatorID == upgradedID || splayGladsId.find(dummy) != NULL){
         throw GladiatorUpgradedIDAlreadyExist();
     }
 

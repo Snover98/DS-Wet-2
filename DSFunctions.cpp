@@ -18,7 +18,7 @@ void* Init(){
 }
 
 StatusType AddTrainer(void *DS, int trainerID) {
-    if(!DS || trainerID<1) return INVALID_INPUT;
+    if(DS == NULL || trainerID <= 0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
@@ -34,7 +34,7 @@ StatusType AddTrainer(void *DS, int trainerID) {
 }
 
 StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level) {
-    if(!DS || gladiatorID<1 || trainerID<1 || level<1) return INVALID_INPUT;
+    if(DS == NULL || gladiatorID <= 0 || trainerID <= 0 || level <= 0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
@@ -52,7 +52,7 @@ StatusType BuyGladiator(void *DS, int gladiatorID, int trainerID, int level) {
 }
 
 StatusType FreeGladiator(void *DS, int gladiatorID) {
-    if(!DS || gladiatorID<1) return INVALID_INPUT;
+    if(DS == NULL || gladiatorID <= 0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
@@ -66,7 +66,7 @@ StatusType FreeGladiator(void *DS, int gladiatorID) {
 }
 
 StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
-    if(!DS || gladiatorID<1 || levelIncrease<1) return INVALID_INPUT;
+    if(DS == NULL || gladiatorID <= 0 || levelIncrease <= 0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
@@ -82,7 +82,7 @@ StatusType LevelUp(void *DS, int gladiatorID, int levelIncrease) {
 }
 
 StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
-    if(!DS || !gladiatorID || trainerID==0) return INVALID_INPUT;
+    if(DS == NULL || gladiatorID == NULL || trainerID==0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
@@ -104,14 +104,13 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
 
 StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators,
                                    int *numOfGladiator) {
-    if(!DS || !gladiators || !numOfGladiator || trainerID == 0)
+    if(DS == NULL || gladiators == NULL || numOfGladiator == NULL || trainerID == 0)
         return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
     try {
-        coliseum->getColiseumGladiatorsByLevel(trainerID, gladiators,
-                                              numOfGladiator);
+        coliseum->getColiseumGladiatorsByLevel(trainerID, gladiators, numOfGladiator);
     } catch(std::bad_alloc& e) {
         return ALLOCATION_ERROR;
     } catch(TrainerNotFound& e) {
@@ -122,7 +121,7 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators,
 }
 
 StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID) {
-    if(!DS || gladiatorID<1 || upgradedID<1) return INVALID_INPUT;
+    if(DS == NULL || gladiatorID <= 0 || upgradedID <= 0) return INVALID_INPUT;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
@@ -140,12 +139,11 @@ StatusType UpgradeGladiator(void *DS, int gladiatorID, int upgradedID) {
 }
 
 StatusType UpdateLevels(void *DS, int stimulantCode, int stimulantFactor) {
-    if(!DS || stimulantCode<1 || stimulantFactor<1) return INVALID_INPUT;
+    if(DS == NULL || stimulantCode < 1 || stimulantFactor < 1) return INVALID_INPUT;
+
+    if(stimulantFactor == 1) return SUCCESS;
 
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
-
-    if(stimulantFactor==1)
-        return SUCCESS;
 
     try {
         coliseum->UpdateLevelsInColiseum(stimulantCode, stimulantFactor);
