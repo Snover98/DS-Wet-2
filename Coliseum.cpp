@@ -6,20 +6,6 @@
 #include <new>
 using namespace DSExceptions;
 
-class seperateGladsByStimulantCode{
-    int stimulant_code;
-    Gladiator* stimulated;
-    Gladiator* unchanged;
-    int stimulated_num;
-    int unchanged_num;
-
-    seperateGladsByStimulantCode(Gladiator* stimulated, Gladiator* unchanged, int stimulant_code, int glads_num);
-
-
-
-
-
-};
 
 class putGladiatorsIdsIntoArray{
 private:
@@ -34,12 +20,42 @@ public:
         if(current_empty_index >= 0){
             //add the gladiator into the array
             array[current_empty_index] = glad.getID();
-            //decrease the index
-            current_empty_index--;
+            //increase the index
+            current_empty_index++;
         }
     }
 };
 
+class separateGladsByStimulantCode{
+private:
+    int stimulant_code;
+    Gladiator* stimulated;
+    Gladiator* unchanged;
+    int stimulated_num;
+    int unchanged_num;
+
+public:
+    separateGladsByStimulantCode(Gladiator* stim, Gladiator* u_c, int s_code):
+            stimulant_code(s_code), stimulated(stim), unchanged(u_c), stimulated_num(0), unchanged_num(0){}
+
+    void operator()(Gladiator& glad){
+        if(glad.getID()%stimulant_code == 0){
+            stimulated[stimulated_num] = glad;
+            stimulated_num++;
+        } else{
+            unchanged[unchanged_num] = glad;
+            unchanged_num++;
+        }
+    }
+
+    int getStimulatedNum() const{
+        return stimulated_num;
+    }
+
+    int getUnchangedNum() const{
+        return unchanged_num;
+    }
+};
 
 
 void Coliseum::AddTrainerToColiseum(int trainerID) {
@@ -173,6 +189,7 @@ int Coliseum::getGladiatorsNum() {
     return gladiatorsNum;
 }
 
+//@TODO change name to get
 int Coliseum::FindTopGladiatorInTrainer(int trainerID) {
     List<Trainer>::Iterator it = trainersList.begin();
 
@@ -202,7 +219,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
             throw std::bad_alloc();
         }
         //put the gladiators in the array
-        splayGladsLvl.Inorder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
+        splayGladsLvl.InverseOrder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
     } else {
         List<Trainer>::Iterator it = trainersList.begin();
 
@@ -224,7 +241,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                         throw std::bad_alloc();
                     }
                     //put the gladiators in the array
-                    (*it).getGladiators().Inorder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
+                    (*it).getGladiators().InverseOrder(putGladiatorsIdsIntoArray(*numOfGladiator, *gladiators));
                     return;
                 }
             }
@@ -235,48 +252,45 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
 }
 
 void Coliseum::UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID) {
-    if(splayGladsId.find(upgradedID))
+    //check if the ID is already in use with the help of a dummy
+    Gladiator dummy = Gladiator(upgradedID);
+    if(splayGladsId.find(dummy) != NULL){
         throw GladiatorUpgradedIDAlreadyExist();
-
-    Gladiator& gladiator = splayGladsId.find(gladiatorID);
-
-    if(!gladiator)
-        throw GladiatorNotFound();
-
-    splayGladsLvl.remove(gladiatorID);
-    splayGladsId.remove(gladiatorID);
-    gladiator.getTrainer().removeGladiator(gladiatorID);
-
-    gladiator.setID(upgradedID);
-
-    splayGladsId.insert(gladiator);
-    splayGladsLvl.insert(gladiator);
-    gladiator.getTrainer().addGladiator(gladiator);
-}
-
-class stimulatePredicate{
-private:
-    int stimulateCode;
-    int stimulateFactor;
-public:
-    stimulatePredicate(int stimulateCode, int stimulateFactor):
-            stimulateCode(stimulateCode), stimulateFactor(stimulateFactor) {}
-    bool operator()(Gladiator& g1) {
-        if(g1.getID()%stimulateCode == 0) {
-            g1.setLevel(g1.getLevel()*stimulateFactor);
-            return true;
-        } else {
-            return false;
-        }
     }
-};
+
+    //find the gladiator we want to change using the dummy
+    dummy.setID(gladiatorID);
+    Gladiator* gladiator = splayGladsId.find(dummy);
+
+    //check if there is a gladiator with that ID in the system
+    if(gladiator == NULL){
+        throw GladiatorNotFound();
+    }
+
+    //remove the gladiator from the trees
+    splayGladsLvl.remove(*gladiator);
+    splayGladsId.remove(*gladiator);
+    gladiator->getTrainer().removeGladiator(*gladiator);
+
+    //update the gladiator's ID
+    gladiator->setID(upgradedID);
+
+    //put the gladiator back in the trees
+    splayGladsId.insert(*gladiator);
+    splayGladsLvl.insert(*gladiator);
+    gladiator->getTrainer().addGladiator(*gladiator);
+}
 
 void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
                               Gladiator* arr2, int size2, Gladiator* newArr) {
+    //merge two sorted arrays
     int arr1Counter = 0;
     int arr2Counter = 0;
     int i;
+
+    //iterate on both arrays
     for(i=0; i<(size1+size2);i++) {
+        //if one of the arrays is empty
         if(arr1Counter == (size1-1) || arr2Counter == (size2-1)){
             break;
         }
@@ -289,7 +303,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
         }
     }
 
-    while((arr1Counter != (size1-1)) || (arr2Counter != (size2-1))) {
+    while(arr1Counter < size1 || (arr2Counter < size2) {
         if(arr1Counter < (size1-1)) {
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;
@@ -301,46 +315,58 @@ void Coliseum::mergeGladiatorsArrays(Gladiator* arr1, int size1,
     }
 }
 
-void Coliseum::stimulateColiseumTree(SplayTree& tree, int stimulantCode,
-                                     int stimulantFactor, int nodesNum) {
-    Gladiator* gladsToChange = (Gladiator*)malloc(sizeof(Gladiator*)*nodesNum);
-    Gladiator* gladsUnChanged = (Gladiator*)malloc(sizeof(Gladiator*)*nodesNum);
-    int *sameNum;
-    int *changeNum;
-    *sameNum = 0;
-    *changeNum = 0;
+void Coliseum::emptyLevelTrees(){
+    //empty global level tree
+    splayGladsLvl.removeAll();
 
-    tree.getByPredicate(gladsToChange, gladsUnChanged,
-        sameNum, changeNum, stimulatePredicate(stimulantCode, stimulantFactor));
-
-    Gladiator* newGlads = (Gladiator*)malloc(sizeof(Gladiator*)*nodesNum);
-
-    mergeGladiatorsArrays(gladsToChange,*changeNum,gladsUnChanged,*changeNum,
-                          newGlads);
-    free(gladsToChange);
-    free(gladsUnChanged);
-
-    tree.removeAll();
-
-    for(int i = 0; i < nodesNum; i++) {
-        tree.insert(newGlads[i]);
+    //for each trainer empty his level tree
+    List<Trainer>::Iterator it = trainersList.begin();
+    while(it != trainersList.end()){
+        (*it).getGladiators().removeAll();
+        ++it;
     }
-
-    free(newGlads);
 }
 
 void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
-    stimulateColiseumTree(splayGladsLvl,stimulantCode,
-                          stimulantFactor,gladiatorsNum);
+    //allocate all needed arrays
+    Gladiator* stimulated = new Gladiator[gladiatorsNum];
+    Gladiator* unchanged = new Gladiator[gladiatorsNum];
+    Gladiator* sorted = new Gladiator[gladiatorsNum];
 
-    List<Trainer>::Iterator it = trainersList.begin();
+    //create the function object
+    separateGladsByStimulantCode separate = separateGladsByStimulantCode(stimulated, unchanged, stimulantCode);
+    //use the function in inverse order
+    splayGladsLvl.InverseOrder(separate);
 
-    while(it != trainersList.end()){
-        stimulateColiseumTree((*it).getGladiators(),stimulantCode,
-                              stimulantFactor,(*it).getNumOfGladiators());
+    //get array sizes
+    int num_stim = separate.getStimulatedNum();
+    int num_same = separate.getUnchangedNum();
+
+    //empty the level trees
+    emptyLevelTrees();
+
+    //change the levels
+    for(int i=0; i<num_stim; i++){
+        stimulated[i].setLevel(stimulantFactor*(stimulated[i].getLevel()));
     }
+
+    //merge the arrays into one big sorted array
+    mergeGladiatorsArrays(stimulated, num_stim, unchanged, num_same, sorted);
+
+    //put the gladiators back in
+    for(int i=0; i<gladiatorsNum; i++){
+        splayGladsLvl.insert(sorted[i]);
+        //we do this because the actual trainer should not be changed
+        sorted[i].getTrainer().getGladiators().insert(sorted[i]);
+    }
+
+    //delete all allocated arrays
+    delete stimulated;
+    delete unchanged;
+    delete sorted;
 }
 
+//@TODO delete list
 void Coliseum::freeColiseum() {
     splayGladsLvl.removeAllAndDeleteInfo();
     splayGladsId.removeAll();
@@ -350,6 +376,7 @@ void Coliseum::freeColiseum() {
     while(it != trainersList.end()){
         (*it).getGladiators().removeAll();
     }
+
 }
 
 

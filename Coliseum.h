@@ -20,6 +20,8 @@ private:
     SplayTree<Gladiator,CompGladsByLevel> splayGladsLvl;
     Gladiator* topGladiator;
     int gladiatorsNum;
+
+    void emptyLevelTrees();
 public:
     //// Constructs a new Coliseum
     Coliseum(): trainersList(), splayGladsId(SplayTree<Gladiator,CompGladsByID>(CompGladsByID())),
@@ -37,8 +39,7 @@ public:
                                       int *numOfGladiator);
     void UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID);
     void UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor);
-    void stimulateColiseumTree(SplayTree& tree, int stimulantCode,
-                               int stimulantFactor, int nodesNum);
+
     void mergeGladiatorsArrays(Gladiator* arr1, int size1,
                                       Gladiator* arr2, int size2,
                                       Gladiator* newArr);
