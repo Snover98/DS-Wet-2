@@ -102,8 +102,8 @@ StatusType GetAllGladiatorsByLevel(void *DS, int trainerID, int **gladiators,
     Coliseum* coliseum = static_cast<Coliseum*>(DS);
 
     try {
-        coliseum->getColiseumGladiatorsByLevel(trainerID, **gladiators,
-                                              *numOfGladiator);
+        coliseum->getColiseumGladiatorsByLevel(trainerID, gladiators,
+                                              numOfGladiator);
     } catch(std::bad_alloc& e) {
         return ALLOCATION_ERROR;
     } catch(TrainerNotFound& e) {
