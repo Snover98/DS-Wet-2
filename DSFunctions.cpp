@@ -92,7 +92,7 @@ StatusType GetTopGladiator(void *DS, int trainerID, int *gladiatorID) {
     }
 
     try {
-        *gladiatorID = coliseum->FindTopGladiatorInTrainer(trainerID);
+        *gladiatorID = coliseum->getTopGladiatorInTrainer(trainerID);
     } catch(std::bad_alloc& e) {
         return ALLOCATION_ERROR;
     } catch(TrainerNotFound& e) {

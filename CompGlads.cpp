@@ -3,7 +3,6 @@
 //
 
 #include "CompGlads.h"
-#include "Gladiator.h"
 
 /*****************************************
 * Compares the the inputted Gladiators by their IDs

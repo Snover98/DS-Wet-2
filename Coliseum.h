@@ -32,7 +32,7 @@ public:
     void FreeGladiatorFromColiseum(int gladiatorID);
     void LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease);
     Gladiator& GetTopGladiator();
-    int FindTopGladiatorInTrainer(int trainerID);
+    int getTopGladiatorInTrainer(int trainerID);
     int getGladiatorsNum();
     void getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                                       int *numOfGladiator);
@@ -42,7 +42,6 @@ public:
     void mergeGladiatorsArrays(Gladiator* arr1, int size1,
                                       Gladiator* arr2, int size2,
                                       Gladiator* newArr);
-    void freeColiseum();
 };
 
 

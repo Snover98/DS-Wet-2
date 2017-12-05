@@ -248,12 +248,13 @@ bool BinTree<T, Compare>::remove(T& info) {
     
     //in case we are trying to remove the root
     if(curr == root) {
+        //delete the original root and save it's children
         TreeNode* tempLeft = curr->left;
         TreeNode* tempRight = curr->right;
         delete curr;
         
-        //delete default - put the root to be the minimum leaf of the right sub tree of the original root
-        root = tempRight.findMin(); 
+        //put the root to be the minimum leaf of the right sub tree of the original root
+        root = findMinNode(tempRight);
         
         //if the original root had no right child
         if(root==NULL) {

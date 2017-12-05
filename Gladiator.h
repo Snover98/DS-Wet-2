@@ -16,8 +16,6 @@ public:
     Gladiator(int id, int lv, Trainer* t);
     Gladiator(int id, int lv, Trainer& t);
     Gladiator(int id);
-    Gladiator();
-    ~Gladiator();
 
     //getters
     Trainer& getTrainer() const;

@@ -21,8 +21,6 @@ class Trainer{
     public:
     //class functions
     Trainer(int id);
-    Trainer();
-    ~Trainer();
 
     //getters
     int getID() const;

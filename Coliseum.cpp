@@ -3,7 +3,7 @@
 //
 #include <cstdlib>
 #include "Coliseum.h"
-#include <new>
+
 using namespace DSExceptions;
 
 
@@ -69,13 +69,13 @@ Coliseum::~Coliseum() {
     delete splayGladsLvl;
     delete splayGladsLvl;
 
-    List<Trainer>::Iterator it = trainersList.begin();
-
-    while(it != trainersList.end()){
-        (*it).getGladiators().removeAll();
-        trainersList.remove(it);
-        it=trainersList.begin();
-    }
+//    List<Trainer>::Iterator it = trainersList.begin();
+//
+//    while(it != trainersList.end()){
+//        (*it).getGladiators().removeAll();
+//        trainersList.remove(it);
+//        it=trainersList.begin();
+//    }
 
     delete trainersList;
 }
@@ -113,8 +113,6 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
     if(it==trainersList.end()){
         throw TrainerNotFound();
     }
-
-    List<Trainer>::Iterator p = it;
 
     //create the new gladiator
     Gladiator* new_gladiator = new Gladiator(gladiatorID,level,*(it));
@@ -210,8 +208,8 @@ int Coliseum::getGladiatorsNum() {
     return gladiatorsNum;
 }
 
-//@TODO change name to get
-int Coliseum::FindTopGladiatorInTrainer(int trainerID) {
+
+int Coliseum::getTopGladiatorInTrainer(int trainerID) {
     List<Trainer>::Iterator it = trainersList.begin();
 
     while(it != trainersList.end()){
@@ -389,10 +387,6 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     delete stimulated;
     delete unchanged;
     delete sorted;
-}
-
-void Coliseum::freeColiseum() {
-    this->~Coliseum();
 }
 
 

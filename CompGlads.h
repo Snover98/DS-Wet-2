@@ -19,8 +19,6 @@ class CompGladsByID{
      **************************************************/
     virtual int operator()(Gladiator& g1, Gladiator& g2);
     //works the same, just with an id and a gladiator
-    virtual int operator()(int id, Gladiator& g);
-    virtual int operator()(Gladiator& g, int id);
 };
 
 class CompGladsByLevel : public CompGladsByID{
