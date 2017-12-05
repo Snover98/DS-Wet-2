@@ -57,6 +57,18 @@ public:
     }
 };
 
+Coliseum::~Coliseum() {
+    splayGladsLvl.removeAllAndDeleteInfo();
+    splayGladsId.removeAll();
+
+    List<Trainer>::Iterator it = trainersList.begin();
+
+    while(it != trainersList.end()){
+        (*it).getGladiators().removeAll();
+        trainersList.remove(it);
+        it=trainersList.begin();
+    }
+}
 
 void Coliseum::AddTrainerToColiseum(int trainerID) {
     //if there are no trainers
@@ -374,15 +386,7 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
 
 //@TODO delete list
 void Coliseum::freeColiseum() {
-    splayGladsLvl.removeAllAndDeleteInfo();
-    splayGladsId.removeAll();
-
-    List<Trainer>::Iterator it = trainersList.begin();
-
-    while(it != trainersList.end()){
-        (*it).getGladiators().removeAll();
-    }
-
+    this->~Coliseum();
 }
 
 
