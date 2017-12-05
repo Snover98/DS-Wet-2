@@ -57,9 +57,15 @@ public:
     }
 };
 
+Coliseum::Coliseum(): topGladiator(NULL), gladiatorsNum(0) {
+    splayGladsId = *(new SplayTree<Gladiator,CompGladsByID>());
+    splayGladsLvl = *(new SplayTree<Gladiator,CompGladsByLevel>());
+    trainersList = *(new List<Trainer>());
+}
+
 Coliseum::~Coliseum() {
-    splayGladsLvl.removeAllAndDeleteInfo();
-    splayGladsId.removeAll();
+    splayGladsId.removeAllAndDeleteInfo();
+    splayGladsLvl.removeAll();
 
     List<Trainer>::Iterator it = trainersList.begin();
 
@@ -91,9 +97,6 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
     //insert the trainer in the correct place
     trainersList.insert(Trainer(trainerID), it);
 }
-
-Coliseum::Coliseum(): trainersList(), splayGladsId(SplayTree<Gladiator,CompGladsByID>(CompGladsByID())),
-                      splayGladsLvl(SplayTree<Gladiator,CompGladsByLevel>()), topGladiator(NULL), gladiatorsNum(0) {}
 
 void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level) {
     //find the gladiator's trainer
@@ -384,7 +387,6 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     delete sorted;
 }
 
-//@TODO delete list
 void Coliseum::freeColiseum() {
     this->~Coliseum();
 }

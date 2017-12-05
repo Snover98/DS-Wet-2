@@ -3,21 +3,6 @@
 
 using namespace std;
 
-template<class T>
-class DefComp {
-public:
-    DefComp();
-
-    ~DefComp();
-
-    int operator()(T& t1, T& t2) {
-        if(t1 == t2){
-            return 0;
-        }
-        return (t1 < t2) ? -1 : 1;
-    }
-};
-
 template<class T, class Compare>
 class BinTree {
 protected:
@@ -28,7 +13,6 @@ protected:
         T& info;
     };
     TreeNode* root;
-    Compare comp;
 
     TreeNode* findNode(T& info){
         TreeNode* curr = root;
@@ -100,11 +84,11 @@ protected:
     template <typename Func>
     void recursiveInverseOrder(TreeNode* p, Func& func);
 
+    int comp(T& t1, T& t2);
+
 public:
     //normal constructor
-    BinTree(Compare comp) : comp(comp), root(NULL) {}
-
-    BinTree() : comp(DefComp<T>()), root(NULL) {}
+    BinTree() : root(NULL) {}
 
     ~BinTree();
 
@@ -149,6 +133,16 @@ public:
 };
 
 template<class T, class Compare>
+BinTree<T, Compare>::~BinTree(){
+    removeAll();
+};
+
+template<class T, class Compare>
+int BinTree<T, Compare>::comp(T& t1, T& t2){
+    return Compare::operator()(t1, t2);
+};
+
+template<class T, class Compare>
 T* BinTree<T, Compare>::find(T& info) {
     //check if the tree is empty
     if(isEmpty()){
@@ -183,7 +177,6 @@ T* BinTree<T, Compare>::findMin() {
     }
     return &(findMinNode()->info);
 }
-
 
 template<class T, class Compare>
 void BinTree<T, Compare>::insert(T& info) {
@@ -320,7 +313,7 @@ void BinTree<T, Compare>::removeAll() {
 
 template<class T, class Compare>
 void BinTree<T, Compare>::removeAllNodes(TreeNode* p) {
-    if (p != NULL){
+    if (p == NULL){
         return;
     }
 
@@ -339,7 +332,7 @@ void BinTree<T, Compare>::removeAllAndDeleteInfo() {
 
 template<class T, class Compare>
 void BinTree<T, Compare>::removeAllNodesAndDeleteInfo(TreeNode* p) {
-    if(p != NULL){
+    if(p == NULL){
         return;
     }
 

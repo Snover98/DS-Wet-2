@@ -6,7 +6,7 @@
 #include "Gladiator.h"
 
 Trainer::Trainer(int id):ID(id), num_of_gladiators(0), top_gladiator(NULL),
-                gladiators(SplayTree<Gladiator, CompGladsByLevel>(CompGladsByLevel())){}
+                gladiators(SplayTree<Gladiator, CompGladsByLevel>()){}
 
 void Trainer::addGladiator(Gladiator& gladiator) {
     //insert the gladiator and then increase the number of gladiators

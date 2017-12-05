@@ -6,7 +6,15 @@
 using namespace DSExceptions;
 
 void* Init(){
-    return new Coliseum();
+    void* DS;
+
+    try {
+        DS = new Coliseum();
+    } catch(std::bad_alloc& e) {
+        DS = NULL;
+    }
+
+    return DS;
 }
 
 StatusType AddTrainer(void *DS, int trainerID) {
@@ -153,7 +161,7 @@ void Quit(void** DS) {
 
     Coliseum* coliseum = static_cast<Coliseum*>(*DS);
 
-    coliseum->freeColiseum();
+    delete coliseum;
 }
 
 
