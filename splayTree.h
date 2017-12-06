@@ -120,7 +120,10 @@ void SplayTree<T>::zig(TreeNode<T>* t){
     TreeNode<T>* parent = t->parent;
 
     //move t's right subtree to the parent
-    t->right->parent = parent;
+    if(t->right != NULL) {
+        t->right->parent = parent;
+    }
+
     parent->left = t->right;
 
 
@@ -138,7 +141,9 @@ void SplayTree<T>::zag(TreeNode<T>* t){
     TreeNode<T>* parent = t->parent;
 
     //move t's left subtree to the parent's right
-    t->left->parent = parent;
+    if(t->left != NULL) {
+        t->left->parent = parent;
+    }
     parent->right = t->left;
 
     //change t's parent, it's the new root
@@ -157,18 +162,25 @@ void SplayTree<T>::zigZig(TreeNode<T>* t){
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
-    if(grand_parent->parent->left == grand_parent && grand_parent->parent != NULL){
+    if(grand_parent->parent != NULL &&
+            grand_parent->parent->left == grand_parent &&
+            grand_parent->parent != NULL){
         grand_parent->parent->left = t;
     } else if(grand_parent->parent != NULL){
         grand_parent->parent->right = t;
     }
 
     //move the parent's right son to the grandparent's left son
-    parent->right->parent = grand_parent;
+    if(parent->right != NULL) {
+        parent->right->parent = grand_parent;
+    }
     grand_parent->left = parent->right;
 
     //move t's right son to the parent's left son
-    t->right->parent = parent;
+    if(t->right != NULL) {
+        t->right->parent = parent;
+    }
+
     parent->left = t->right;
 
     //make the former parent t's right son
@@ -188,18 +200,24 @@ void SplayTree<T>::zagZag(TreeNode<T>* t){
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
-    if(grand_parent->parent->left == grand_parent && grand_parent->parent != NULL){
+    if(grand_parent->parent != NULL &&
+            grand_parent->parent->left == grand_parent &&
+            grand_parent->parent != NULL){
         grand_parent->parent->left = t;
     } else if(grand_parent->parent != NULL){
         grand_parent->parent->right = t;
     }
 
     //move the parent's left son to the grandparent's right son
-    parent->left->parent = grand_parent;
+    if(parent->left != NULL) {
+        parent->left->parent = grand_parent;
+    }
     grand_parent->right = parent->left;
 
     //move t's left son to the parent's right son
-    t->left->parent = parent;
+    if(parent->left != NULL) {
+        t->left->parent = parent;
+    }
     parent->right = t->left;
 
     //make the former parent t's left son
@@ -219,18 +237,24 @@ void SplayTree<T>::zigZag(TreeNode<T>* t){
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
-    if(grand_parent->parent->left == grand_parent && grand_parent->parent != NULL){
+    if(grand_parent->parent != NULL &&
+            grand_parent->parent->left == grand_parent &&
+            grand_parent->parent != NULL){
         grand_parent->parent->left = t;
     } else if(grand_parent->parent != NULL){
         grand_parent->parent->right = t;
     }
 
     //move t's left son to the parent's right son
-    t->left->parent = parent;
+    if(t->left != NULL) {
+        t->left->parent = parent;
+    }
     parent->right = t->left;
 
     //move t's right son to the grandparent's left son
-    t->right->parent = grand_parent;
+    if(t->right != NULL) {
+        t->right->parent = grand_parent;
+    }
     grand_parent->left = t->right;
 
     //make the former parent into t's left son
@@ -250,18 +274,24 @@ void SplayTree<T>::zagZig(TreeNode<T>* t){
 
     //make sure that the grandparent's parent is now t's parent (only make it t's parent if it's NULL)
     t->parent = grand_parent->parent;
-    if(grand_parent->parent->left == grand_parent && grand_parent->parent != NULL){
+    if(grand_parent->parent != NULL &&
+            grand_parent->parent->left == grand_parent &&
+            grand_parent->parent != NULL){
         grand_parent->parent->left = t;
     } else if(grand_parent->parent != NULL){
         grand_parent->parent->right = t;
     }
 
     //move t's right son to the parent's left son
-    t->right->parent = parent;
+    if(t->right != NULL) {
+        t->right->parent = parent;
+    }
     parent->left = t->right;
 
     //move t's left son to the grandparent's right son
-    t->left->parent = grand_parent;
+    if(t->left != NULL) {
+        t->left->parent = grand_parent;
+    }
     grand_parent->right = t->left;
 
     //make the former parent into t's right son

@@ -129,8 +129,10 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
     //create the new gladiator
     Gladiator* new_gladiator = new Gladiator(gladiatorID,level,*(it));
 
+    Gladiator* gladiatorExist = splayGladsId->find(*new_gladiator);
+
     //check if it's already in
-    if(splayGladsId->find(*new_gladiator)){
+    if(gladiatorExist != NULL && gladiatorExist->getID()==gladiatorID){
         delete new_gladiator;
         throw GladiatorAlreadyIn();
     }
@@ -154,7 +156,7 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
     Gladiator* glad = (splayGladsId->find(dummy));
 
     //if no gladiator was found
-    if(glad == NULL){
+    if(glad == NULL || glad->getID() != gladiatorID){
         throw GladiatorNotFound();
     }
 
@@ -199,8 +201,8 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
     Gladiator dummy = Gladiator(gladiatorID);
     Gladiator* gladiator = splayGladsId->find(dummy);
 
-    //if no gladiator was found
-    if(gladiator == NULL){
+    //if the gladiator was found
+    if(gladiator == NULL || gladiator->getID() != gladiatorID){
         throw GladiatorNotFound();
     }
 
