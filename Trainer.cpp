@@ -17,7 +17,7 @@ void Trainer::addGladiator(Gladiator& gladiator) {
     num_of_gladiators++;
 
     //check if the new gladiator has a higher level than the top gladiator
-    if(top_gladiator->getLevel() < gladiator.getLevel()){
+    if(top_gladiator == NULL || top_gladiator->getLevel() < gladiator.getLevel()){
         top_gladiator = &gladiator;
     }
 }

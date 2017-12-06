@@ -73,7 +73,7 @@ public:
     virtual void insert(T& info);
 
     //removes the node with relevant info. returns false if it doesn't exist, true otherwise.
-    bool remove(T& info);
+    virtual bool remove(T& info);
 
     //remove all nodes from binary tree
     void removeAll();
@@ -342,7 +342,7 @@ TreeNode<T>* BinTree<T>::insertNode(TreeNode<T> *t, TreeNode<T> *start){
 
     //if the there is no node with the same info
     if(comp(t->info, closest->info) != 0){
-        if(closest->left == NULL){  //if it should be to the left of the closest
+        if(comp(t->info, closest->info) < 0){  //if it should be to the left of the closest
             closest->left = t;
         } else {    //if it should be to the right of the closest
             closest->right = t;

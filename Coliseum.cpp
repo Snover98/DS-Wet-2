@@ -145,7 +145,7 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
     //add the gladiator to the trees
     splayGladsId->insert(*new_gladiator);
     splayGladsLvl->insert(*new_gladiator);
-
+    (*it).addGladiator(*new_gladiator);
     //update the number of gladiators
     gladiatorsNum++;
 }
