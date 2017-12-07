@@ -12,6 +12,10 @@ Gladiator::Gladiator(int id, int lv, Trainer& t): ID(id), level(lv), trainer(&t)
 
 Gladiator::Gladiator(int id): ID(id), level(0), trainer(NULL) {}
 
+Gladiator::~Gladiator(){
+    trainer = NULL;
+}
+
 
 int Gladiator::getID() const{
     return this->ID;
