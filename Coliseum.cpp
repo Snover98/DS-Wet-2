@@ -259,6 +259,14 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
     if(trainerID < 0) {
         //set numOfGladiator into the number of all of the gladiators
         *numOfGladiator = getGladiatorsNum();
+
+        //check if there are any gladiators
+        if(*numOfGladiator == 0){
+            //set the array as NULL
+            *gladiators = NULL;
+            return;
+        }
+
         //allocate the array accordingly
         *gladiators = (int*)malloc(sizeof(int)*(*numOfGladiator));
         //check if the allocation was successful
@@ -266,8 +274,9 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
             throw std::bad_alloc();
         }
         //put the gladiators in the array
-        putGladiatorsIdsIntoArray<Gladiator> put_ids = putGladiatorsIdsIntoArray<Gladiator>(*numOfGladiator,
-                                                                                            *gladiators);
+        putGladiatorsIdsIntoArray<Gladiator> put_ids =
+                putGladiatorsIdsIntoArray<Gladiator>(*numOfGladiator,  *gladiators);
+
         splayGladsLvl->InverseOrder(put_ids);
     } else {
         List<Trainer>::Iterator it = trainersList->begin();
