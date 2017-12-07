@@ -13,11 +13,11 @@ private:
     int current_empty_index;
     int* id_array;
 public:
-    putGladiatorsIdsIntoArray(int n, int* arr):array_size(n), current_empty_index(n-1), id_array(arr){}
+    putGladiatorsIdsIntoArray(int n, int* arr):array_size(n), current_empty_index(0), id_array(arr){}
 
     void operator()(T& glad) {
         //if the array is not full
-        if(current_empty_index >= 0){
+        if(current_empty_index < array_size){
             //add the gladiator into the array
             id_array[current_empty_index] = glad.getID();
             //increase the index
