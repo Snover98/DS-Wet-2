@@ -355,7 +355,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator** arr1, int size1,
     //iterate on both arrays
     for(i=0; i<(size1+size2);i++) {
         //if one of the arrays has been fully done
-        if(arr1Counter == (size1-1) || arr2Counter == (size2-1)){
+        if(arr1Counter == size1 || arr2Counter == size2){
             break;
         }
 
