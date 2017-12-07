@@ -16,6 +16,11 @@ public:
     TreeNode* right;
     T& info;
     TreeNode(T& t): parent(NULL), left(NULL), right(NULL), info(t){}
+    ~TreeNode(){
+        parent = NULL;
+        left = NULL;
+        right = NULL;
+    }
 };
 
 
