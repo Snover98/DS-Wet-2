@@ -66,7 +66,7 @@ T* SplayTree<T>::find(T& info){
     splay(found);
 
     //if it has the correct info, return it
-    if(this->comp(info, found->info)){
+    if(this->comp(info, found->info) == 0){
         return &(found->info);
     }
 
@@ -232,7 +232,7 @@ void SplayTree<T>::zagZag(TreeNode<T>* x){
     z->right = y->left;
 
     //move x's left son to the parent's right son
-    if(y->left != NULL) {
+    if(x->left != NULL) {
         x->left->parent = y;
     }
     y->right = x->left;
