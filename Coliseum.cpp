@@ -403,6 +403,11 @@ void Coliseum::emptyLevelTrees(){
 }
 
 void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
+    //checks if there are no gladiators in the coliseum
+    if(gladiatorsNum == 0) {
+        return;
+    }
+
     //allocate all needed arrays
     Gladiator** stimulated = new Gladiator*[gladiatorsNum];
     Gladiator** unchanged = new Gladiator*[gladiatorsNum];
