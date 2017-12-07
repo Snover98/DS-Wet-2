@@ -125,12 +125,8 @@ bool SplayTree<T>::remove(T& info){
     TreeNode<T>* closest = this->findNode(info, this->root);
     splay(closest);
 
-    //if the info is there, remove it normally
-    if((this->comp)(info, closest->info) == 0){
-        return BinTree<T>::remove(info);
-    }
-
-    return false;
+    //now that the closest is in the root, remove normally
+    return BinTree<T>::remove(info);
 }
 
 //when t's parent is the root and t is a left son
