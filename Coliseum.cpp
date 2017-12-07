@@ -208,14 +208,14 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
 
     //remove the gladiator from the trees sorted by level
     splayGladsLvl->remove(*gladiator);
-    gladiator->getTrainer().getGladiators().remove(*gladiator);
+    gladiator->getTrainer().removeGladiator(*gladiator);
 
     //change the gladiator's level
     gladiator->setLevel(gladiator->getLevel()+levelIncrease);
 
-    //put hum back in the level trees
+    //put him back in the level trees
     splayGladsLvl->insert(*gladiator);
-    gladiator->getTrainer().getGladiators().insert(*gladiator);
+    gladiator->getTrainer().addGladiator(*gladiator);
 }
 
 Gladiator& Coliseum::GetTopGladiator() {
