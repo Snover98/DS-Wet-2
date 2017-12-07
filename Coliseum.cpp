@@ -216,6 +216,11 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
     //put him back in the level trees
     splayGladsLvl->insert(*gladiator);
     gladiator->getTrainer().addGladiator(*gladiator);
+
+    //check if top gladiator changed
+    if(topGladiator->getLevel() < gladiator->getLevel()){
+        topGladiator = gladiator;
+    }
 }
 
 Gladiator& Coliseum::GetTopGladiator() {
