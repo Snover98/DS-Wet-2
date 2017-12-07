@@ -16,8 +16,11 @@ void Trainer::addGladiator(Gladiator& gladiator) {
     gladiators->insert(gladiator);
     num_of_gladiators++;
 
+    //comparer by level
+    CompGladsByLevel<Gladiator> comp_lv = CompGladsByLevel<Gladiator>();
+
     //check if the new gladiator has a higher level than the top gladiator
-    if(top_gladiator == NULL || top_gladiator->getLevel() < gladiator.getLevel()){
+    if(top_gladiator == NULL || comp_lv(gladiator, *top_gladiator) > 0){
         top_gladiator = &gladiator;
     }
 }

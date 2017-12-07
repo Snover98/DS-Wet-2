@@ -138,8 +138,11 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
         throw GladiatorAlreadyIn();
     }
 
+    //comparer by level
+    CompGladsByLevel<Gladiator> comp_lv = CompGladsByLevel<Gladiator>();
+
     //check if the new gladiator has a higher level than the top gladiator
-    if(topGladiator == NULL || level>topGladiator->getLevel()){
+    if(topGladiator == NULL || comp_lv(*new_gladiator, *topGladiator) > 0){
         topGladiator = new_gladiator;
     }
 
@@ -180,7 +183,7 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
 
         while(it != trainersList->end()){
             if((*it).getTopGladiator() != NULL &&
-                    (topGladiator == NULL || (*it).getTopGladiator()->getLevel() > topGladiator->getLevel())) {
+                    (topGladiator == NULL || comp_lv(*((*it).getTopGladiator()), *topGladiator) > 0)){
                 topGladiator = (*it).getTopGladiator();
             }
             it++;
@@ -219,8 +222,11 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
     splayGladsLvl->insert(*gladiator);
     gladiator->getTrainer().addGladiator(*gladiator);
 
-    //check if top gladiator changed
-    if(topGladiator->getLevel() < gladiator->getLevel()){
+    //comparer by level
+    CompGladsByLevel<Gladiator> comp_lv = CompGladsByLevel<Gladiator>();
+
+    //check if the new gladiator has a higher level than the top gladiator
+    if(topGladiator == NULL || comp_lv(*gladiator, *topGladiator) > 0){
         topGladiator = gladiator;
     }
 }
