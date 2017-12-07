@@ -89,7 +89,7 @@ Coliseum::~Coliseum() {
 void Coliseum::AddTrainerToColiseum(int trainerID) {
     //if there are no trainers
     if(trainersList->getSize() == 0){
-        trainersList->insert(Trainer(trainerID));
+        trainersList->insert(new Trainer(trainerID));
         return;
     }
 
@@ -101,7 +101,7 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
 
     //if we got to the end of the list - the trainer is not found, so we add him
     if(it == trainersList->end()) {
-        trainersList->insert(Trainer(trainerID), it);
+        trainersList->insert(new Trainer(trainerID), it);
         return;
     }
 
@@ -111,7 +111,7 @@ void Coliseum::AddTrainerToColiseum(int trainerID) {
     }
 
     //insert the trainer in the correct place
-    trainersList->insert(Trainer(trainerID), it);
+    trainersList->insert(new Trainer(trainerID), it);
 }
 
 void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level) {

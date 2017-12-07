@@ -29,7 +29,7 @@ public:
      * @tparam T : Type of the generic list.
      * @param data : The data of type T we want to insert to the end of the list.
      */
-    void insert(const T &data);
+    void insert(T* data);
 
     /**
      * Sorts the list using a Compare function object.
@@ -170,7 +170,7 @@ public:
      * located right after the insertion.
      * @throw ElementNotFound() in case Iterator belongs to another list.
      */
-    void insert(const T &data, List<T>::Iterator iterator);
+    void insert(T* data, List<T>::Iterator iterator);
 
     /**
      * Removes an element from the list.
@@ -195,7 +195,7 @@ private:
          * @param next : pointer to the next Node object on the list.
          * @param prev : pointer to the previous Node object on the list.
          */
-        Node(const T &data,
+        Node(T* data,
              Node* const next = NULL,
              Node* const prev = NULL);
 
@@ -271,12 +271,12 @@ List<T>& List<T>::operator=(const List<T>& other) {
 }
 
 template <class T>
-void List<T>::insert(const T &data) {
+void List<T>::insert(T* data) {
     List<T>::insert(data, this->end());
 }
 
 template <class T>
-void List<T>::insert(const T &data,List<T>::Iterator iterator) {
+void List<T>::insert(T* data,List<T>::Iterator iterator) {
     if (iterator._list != this) throw ElementNotFound();
     Node *new_node = new Node(data, iterator._element,
                               iterator._element->_prev);
@@ -426,8 +426,8 @@ template <class T>
 List<T>::Node::Node() : _data(new T()), _next(), _prev() {}
 
 template <class T>
-List<T>::Node::Node(const T &data,Node* const next,Node* const prev) :
-        _data(new T(data)), _next(next), _prev(prev) {}
+List<T>::Node::Node(T* data,Node* const next,Node* const prev) :
+        _data(data), _next(next), _prev(prev) {}
 
 template <class T>
 List<T>::Node::~Node() {
