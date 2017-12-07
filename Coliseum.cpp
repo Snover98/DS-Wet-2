@@ -344,41 +344,73 @@ void Coliseum::UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID) {
 
 void Coliseum::mergeGladiatorsArrays(Gladiator** arr1, int size1,
                               Gladiator** arr2, int size2, Gladiator** newArr) {
-    //merge two sorted arrays
-    int arr1Counter = 0;
-    int arr2Counter = 0;
-    int i;
+
+    int i = 0, j = 0, k = 0;
 
     //comparer by level
     CompGladsByLevel<Gladiator> comp_lv = CompGladsByLevel<Gladiator>();
 
-    //iterate on both arrays
-    for(i=0; i<(size1+size2);i++) {
-        //if one of the arrays has been fully done
-        if(arr1Counter == size1 || arr2Counter == size2){
-            break;
+    // Traverse both array
+    while (i<size1 && j <size2)
+    {
+        // Check if current element of first
+        // array is smaller than current element
+        // of second array. If yes, store first
+        // array element and increment first array
+        // index. Otherwise do same with second array
+        if (comp_lv(*arr1[i], *arr2[j]) < 0){
+            newArr[k++] = arr1[i++];
         }
-
-        if(comp_lv(*arr1[arr1Counter], *arr2[arr2Counter]) <= 0){
-            newArr[i] = arr1[arr1Counter];
-            arr1Counter++;
-        } else{
-            newArr[i] = arr2[arr2Counter];
-            arr2Counter++;
+        else{
+            newArr[k++] = arr2[j++];
         }
     }
 
-    //until the remaining array is done
-    while(arr1Counter < size1 || arr2Counter < size2) {
-        if(arr1Counter < size1) {
-            newArr[i] = arr1[arr1Counter];
-            arr1Counter++;
-        } else {
-            newArr[i] = arr2[arr2Counter];
-            arr2Counter++;
-        }
-        i++;
+    // Store remaining elements of first array
+    while (i < size1){
+        newArr[k++] = arr1[i++];
     }
+
+    // Store remaining elements of second array
+    while (j < size2){
+        newArr[k++] = arr2[j++];
+    }
+
+//    //merge two sorted arrays
+//    int arr1Counter = 0;
+//    int arr2Counter = 0;
+//    int i;
+//
+//    //comparer by level
+//    CompGladsByLevel<Gladiator> comp_lv = CompGladsByLevel<Gladiator>();
+//
+//    //iterate on both arrays
+//    for(i=0; i<(size1+size2);i++) {
+//        //if one of the arrays has been fully done
+//        if(arr1Counter == size1 || arr2Counter == size2){
+//            break;
+//        }
+//
+//        if(comp_lv(*arr1[arr1Counter], *arr2[arr2Counter]) <= 0){
+//            newArr[i] = arr1[arr1Counter];
+//            arr1Counter++;
+//        } else{
+//            newArr[i] = arr2[arr2Counter];
+//            arr2Counter++;
+//        }
+//    }
+//
+//    //until the remaining array is done
+//    while(arr1Counter < size1 || arr2Counter < size2) {
+//        if(arr1Counter < size1) {
+//            newArr[i] = arr1[arr1Counter];
+//            arr1Counter++;
+//        } else {
+//            newArr[i] = arr2[arr2Counter];
+//            arr2Counter++;
+//        }
+//        i++;
+//    }
 }
 
 void Coliseum::emptyLevelTrees(){
