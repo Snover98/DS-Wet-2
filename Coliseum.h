@@ -16,8 +16,8 @@
 class Coliseum{
 private:
     List<Trainer>* trainers_list;
-    SplayTree<Gladiator>* splay_gladsId;
-    SplayTree<Gladiator>* splay_gladsLvl;
+    SplayTree<Gladiator>* splay_glads_id;
+    SplayTree<Gladiator>* splay_glads_lvl;
     Gladiator* top_gladiator;
     int gladiators_num;
 
@@ -34,7 +34,7 @@ public:
     Gladiator& GetTopGladiator();
     int getTopGladiatorInTrainer(int trainerID);
     void getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
-                                      int *numOfGladiator);
+                                      int *num_of_gladiator);
     void UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID);
     void UpdateLevelsInColiseum(int stimulant_code, int stimulant_factor);
 
