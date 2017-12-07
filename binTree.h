@@ -274,9 +274,44 @@ void BinTree<T>::recursiveInverseOrder(TreeNode<T>* p, Func<T>& func) {
 
 template<class T>
 void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
-    T& old_t1_info = t1->info;
-    t1->info = t2->info;
-    t2->info = old_t1_info;
+    //switch left children
+    if(t1->left != NULL){
+        t1->left->parent = t2;
+    }
+
+    if(t2->left != NULL){
+        t2->left->parent = t1;
+    }
+
+    //switch right children
+    if(t1->right != NULL){
+        t1->right->parent = t2;
+    }
+
+    if(t2->right != NULL){
+        t1->right->parent = t1;
+    }
+
+    //switch parents
+    if(t1->parent != NULL){
+        if(t1->parent->right == t1){
+            t1->parent->right = t2;
+        } else{
+            t1->parent->left = t2;
+        }
+    }
+
+    if(t2->parent != NULL){
+        if(t2->parent->right == t2){
+            t2->parent->right = t1;
+        } else{
+            t2->parent->left = t1;
+        }
+    }
+//
+//    T& old_t1_info = t1->info;
+//    t1->info = t2->info;
+//    t2->info = old_t1_info;
 }
 
 template<class T>
@@ -430,8 +465,8 @@ void BinTree<T>::removeNode(TreeNode<T> *t){
     //switch between them
     switchNodes(t, t_follower);
 
-    //now t_follower points to t's original info, so we'll just delete it instead
-    removeNode(t_follower);
+    //remove t again
+    removeNode(t);
 }
 
 
