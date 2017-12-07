@@ -32,14 +32,6 @@ public:
     void insert(T* data);
 
     /**
-     * Sorts the list using a Compare function object.
-     * @tparam T : Type of the generic list.
-     * @tparam Compare : Comparison function object type.
-     * @param compare : Comparison function object.
-     */
-    template <class Compare> void sort(const Compare& compare);
-
-    /**
      * Returns the number of elements on the list.
      * @tparam T : Type of the generic list.
      * @return
@@ -448,25 +440,6 @@ void List<T>::swap(List<T>::Node& A, List<T>::Node& B) {
     B._data = tmp._data;
     tmp._data = NULL;
     tmp.isolate();
-}
-
-template <class T>
-template <class Compare>
-void List<T>::sort(const Compare& compare) {
-    List<T>::Iterator it;
-
-    bool swapped;
-    do {
-        it = this->begin();
-        swapped = false;
-        while(it._element != _tail && it._element->_next != _tail) {
-            if (compare(*(it._element->_next->_data), *(it._element->_data))) {
-                swap(*it._element, *it._element->_next);
-                swapped = true;
-            }
-            it++;
-        }
-    } while (swapped);
 }
 
 template <class T>
