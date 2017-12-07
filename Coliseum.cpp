@@ -440,9 +440,9 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     topGladiator = sorted[0];
 
     //delete all allocated arrays
-    delete stimulated;
-    delete unchanged;
-    delete sorted;
+    delete[] stimulated;
+    delete[] unchanged;
+    delete[] sorted;
 }
 
 
