@@ -161,6 +161,7 @@ void Quit(void** DS) {
     Coliseum* coliseum = static_cast<Coliseum*>(*DS);
 
     delete coliseum;
+    *DS = NULL;
 }
 
 
