@@ -34,6 +34,7 @@ class Trainer{
     //removeGladiator
     void removeGladiator(Gladiator& g);
     //emptyTree
+    void emptyTree();
 
 };
 

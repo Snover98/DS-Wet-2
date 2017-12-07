@@ -388,7 +388,7 @@ void Coliseum::emptyLevelTrees(){
     //for each trainer empty his level tree
     List<Trainer>::Iterator it = trainersList->begin();
     while(it != trainersList->end()){
-        (*it).getGladiators().removeAll();
+        (*it).emptyTree();
         ++it;
     }
 }
@@ -424,7 +424,7 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     for(int i=0; i<gladiatorsNum; i++){
         splayGladsLvl->insert(*sorted[i]);
         //we do this because the actual trainer should not be changed
-        sorted[i]->getTrainer().getGladiators().insert(*sorted[i]);
+        sorted[i]->getTrainer().addGladiator(*sorted[i]);
     }
 
     //delete all allocated arrays

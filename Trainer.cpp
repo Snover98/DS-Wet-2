@@ -52,3 +52,8 @@ Gladiator* Trainer::getTopGladiator() const{
 SplayTree<Gladiator>& Trainer::getGladiators(){
     return *(this->gladiators);
 };
+
+void Trainer::emptyTree(){
+    gladiators->removeAll();
+    num_of_gladiators = 0;
+}
