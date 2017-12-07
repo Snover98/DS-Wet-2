@@ -6,6 +6,7 @@
 
 using namespace DSExceptions;
 
+//functor for putting gladiator ids into an array
 template<class T>
 class putGladiatorsIdsIntoArray : public Func<T>{
 private:
@@ -26,6 +27,7 @@ public:
     }
 };
 
+//functor for separating the gladaitors into 2 arrays by a stimulant code
 template<class T>
 class separateGladsByStimulantCode : public Func<T>{
 private:
@@ -40,10 +42,13 @@ public:
             stimulant_code(s_code), stimulated(stim), unchanged(u_c), stimulated_num(0), unchanged_num(0){}
 
     void operator()(Gladiator& glad) {
+        //check if the code works for the gladiator
         if(glad.getID()%stimulant_code == 0){
+            //if it does, add him to the stimulated array
             stimulated[stimulated_num] = &glad;
             stimulated_num++;
         } else{
+            //if it doesn't, add him to the unchanged array
             unchanged[unchanged_num] = &glad;
             unchanged_num++;
         }
@@ -61,6 +66,7 @@ public:
 Coliseum::Coliseum(): topGladiator(NULL), gladiatorsNum(0),
                       splayGladsId(NULL), splayGladsLvl(NULL),
                       trainersList(NULL){
+    //build the trees
     CompGladsByID<Gladiator>* comp_id =  new CompGladsByID<Gladiator>();
     CompGladsByLevel<Gladiator>* comp_lv = new CompGladsByLevel<Gladiator>();
     splayGladsId = new SplayTree<Gladiator>(comp_id);
@@ -69,20 +75,14 @@ Coliseum::Coliseum(): topGladiator(NULL), gladiatorsNum(0),
 }
 
 Coliseum::~Coliseum() {
+    //delete the level tree
     delete splayGladsLvl;
-
-//    List<Trainer>::Iterator it = trainersList->begin();
-//
-//    while(it != trainersList->end()){
-//        (*it).getGladiators().removeAll();
-//        trainersList->remove(it);
-//        it=trainersList->begin();
-//    }
-
+    //delete the list and trainers within
     delete trainersList;
 
     //delete the gladiators too
     splayGladsId->removeAllAndDeleteInfo();
+    //delete the last tree
     delete splayGladsId;
 }
 
@@ -130,10 +130,9 @@ void Coliseum::AddGladiatorToColiseum(int gladiatorID, int trainerID, int level)
     //create the new gladiator
     Gladiator* new_gladiator = new Gladiator(gladiatorID,level,*(it));
 
-    Gladiator* gladiatorExist = splayGladsId->find(*new_gladiator);
-
     //check if it's already in
-    if(gladiatorExist != NULL && gladiatorExist->getID()==gladiatorID){
+    Gladiator* found_glad = splayGladsId->find(*new_gladiator);
+    if(found_glad != NULL && found_glad->getID()==gladiatorID){
         delete new_gladiator;
         throw GladiatorAlreadyIn();
     }
@@ -181,6 +180,7 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
         List<Trainer>::Iterator it = trainersList->begin();
         topGladiator = (*it).getTopGladiator();
 
+        //check the top gladiator of each trainer
         while(it != trainersList->end()){
             if((*it).getTopGladiator() != NULL &&
                     (topGladiator == NULL || comp_lv(*((*it).getTopGladiator()), *topGladiator) > 0)){
@@ -232,15 +232,12 @@ void Coliseum::LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease) {
 }
 
 Gladiator& Coliseum::GetTopGladiator() {
-    if(gladiatorsNum == 0)
+    //check if there are any gladiators
+    if(gladiatorsNum == 0) {
         throw ColiseumIsEmpty();
+    }
     return *topGladiator;
 }
-
-int Coliseum::getGladiatorsNum() {
-    return gladiatorsNum;
-}
-
 
 int Coliseum::getTopGladiatorInTrainer(int trainerID) {
 
@@ -265,7 +262,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
     //if the id is negative
     if(trainerID < 0) {
         //set numOfGladiator into the number of all of the gladiators
-        *numOfGladiator = getGladiatorsNum();
+        *numOfGladiator = gladiatorsNum;
 
         //check if there are any gladiators
         if(*numOfGladiator == 0){
@@ -285,10 +282,11 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                 putGladiatorsIdsIntoArray<Gladiator>(*numOfGladiator,  *gladiators);
 
         splayGladsLvl->InverseOrder(put_ids);
-    } else {
+    } else {    //find the trainer with the inputted id
         List<Trainer>::Iterator it = trainersList->begin();
 
         while(it != trainersList->end()){
+            //if the trainer was fiund
             if((*it).getID() == trainerID) {
                 //if the trainer has no gladiators
                 if((*it).getNumOfGladiators() == 0) {
@@ -314,7 +312,7 @@ void Coliseum::getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
             }
             ++it;
         }
-
+        //if the trainer was not found
         throw TrainerNotFound();
     }
 }
@@ -377,7 +375,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator** arr1, int size1,
         }
     }
 
-    //until the remaining array is done
+    //until the remaining array is done, fill the new array
     while(arr1Counter < size1 || arr2Counter < size2) {
         if(arr1Counter < size1) {
             newArr[i] = arr1[arr1Counter];

@@ -15,11 +15,11 @@
 
 class Coliseum{
 private:
-    List<Trainer>* trainersList;
-    SplayTree<Gladiator>* splayGladsId;
-    SplayTree<Gladiator>* splayGladsLvl;
-    Gladiator* topGladiator;
-    int gladiatorsNum;
+    List<Trainer>* trainers_list;
+    SplayTree<Gladiator>* splay_gladsId;
+    SplayTree<Gladiator>* splay_gladsLvl;
+    Gladiator* top_gladiator;
+    int gladiators_num;
 
     void emptyLevelTrees();
 public:
@@ -30,18 +30,17 @@ public:
     void AddTrainerToColiseum(int trainerID);
     void AddGladiatorToColiseum(int gladiatorID, int trainerID, int level);
     void FreeGladiatorFromColiseum(int gladiatorID);
-    void LevelUpGladiatorInColiseum(int gladiatorID, int levelIncrease);
+    void LevelUpGladiatorInColiseum(int gladiatorID, int level_increase);
     Gladiator& GetTopGladiator();
     int getTopGladiatorInTrainer(int trainerID);
-    int getGladiatorsNum();
     void getColiseumGladiatorsByLevel(int trainerID, int **gladiators,
                                       int *numOfGladiator);
     void UpgradeGladiatorIDInColiseum(int gladiatorID, int upgradedID);
-    void UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor);
+    void UpdateLevelsInColiseum(int stimulant_code, int stimulant_factor);
 
     void mergeGladiatorsArrays(Gladiator** arr1, int size1,
                                       Gladiator** arr2, int size2,
-                                      Gladiator** newArr);
+                                      Gladiator** new_arr);
 };
 
 
