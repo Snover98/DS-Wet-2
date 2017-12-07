@@ -37,7 +37,7 @@ protected:
     TreeNode<T>* findMinNode(TreeNode<T>* start);
 
     //insert a node into the sub-tree 'start'
-    TreeNode<T>* insertNode(TreeNode<T>* t, TreeNode<T>* start);
+    void insertNode(TreeNode<T>* t, TreeNode<T>* start);
     //insert info into the tree and return it's node
     TreeNode<T>* insertInfo(T& info);
 
@@ -404,7 +404,7 @@ TreeNode<T>* BinTree<T>::findMinNode(TreeNode<T> *start){
 }
 
 template<class T>
-TreeNode<T>* BinTree<T>::insertNode(TreeNode<T> *t, TreeNode<T> *start){
+void BinTree<T>::insertNode(TreeNode<T> *t, TreeNode<T> *start){
     //find the closest node
     TreeNode<T>* closest = findNode(t->info, start);
 
@@ -421,12 +421,9 @@ TreeNode<T>* BinTree<T>::insertNode(TreeNode<T> *t, TreeNode<T> *start){
             closest->right = t;
             t->parent = closest;
         } else {    //otherwise, insert t to the right of the closest
-            return insertNode(t, closest->right);
+            insertNode(t, closest->right);
         }
     }
-
-    //return the node
-    return t;
 }
 
 template<class T>
@@ -440,7 +437,8 @@ TreeNode<T>* BinTree<T>::insertInfo(T &info){
         return t;
     }
 
-    return insertNode(t, root);
+    insertNode(t, root);
+    return t;
 }
 
 template<class T>
