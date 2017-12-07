@@ -190,7 +190,7 @@ void BinTree<T>::removeAllNodes(TreeNode<T>* p) {
 
 template<class T>
 void BinTree<T>::removeAllAndDeleteInfo() {
-    removeAllNodes(root);
+    removeAllNodesAndDeleteInfo(root);
     root = NULL;
 }
 
@@ -204,7 +204,7 @@ void BinTree<T>::removeAllNodesAndDeleteInfo(TreeNode<T>* p) {
 
     removeAllNodesAndDeleteInfo(p->right);
 
-    delete p->info;
+    delete &(p->info);
     delete p;
 }
 
