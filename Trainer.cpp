@@ -24,7 +24,7 @@ void Trainer::addGladiator(Gladiator& gladiator) {
 
 void Trainer::removeGladiator(Gladiator& g) {
     //if the gladiator was not there
-    if(!gladiators->remove(g)){
+    if(!(gladiators->remove(g))){
         return;
     }
 
@@ -35,9 +35,6 @@ void Trainer::removeGladiator(Gladiator& g) {
 
     //update the number of gladiators
     num_of_gladiators--;
-
-    //delete the gladiator
-    delete &g;
 }
 
 int Trainer::getID() const{
