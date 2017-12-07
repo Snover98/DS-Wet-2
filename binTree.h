@@ -302,7 +302,7 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
     }
 
     if(t2->right != NULL){
-        t1->right->parent = t1;
+        t2->right->parent = t1;
     }
 
     swap(t1->right, t2->right);
