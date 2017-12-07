@@ -283,6 +283,10 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
         t2->left->parent = t1;
     }
 
+    TreeNode<T>* t1_old_left = t1->left;
+    t1->left = t2->left;
+    t2->left = t1_old_left;
+
     //switch right children
     if(t1->right != NULL){
         t1->right->parent = t2;
@@ -291,6 +295,10 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
     if(t2->right != NULL){
         t1->right->parent = t1;
     }
+
+    TreeNode<T>* t1_old_right = t1->right;
+    t1->right = t2->right;
+    t2->right = t1_old_right;
 
     //switch parents
     if(t1->parent != NULL){
@@ -308,6 +316,11 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
             t2->parent->left = t1;
         }
     }
+
+    TreeNode<T>* t1_old_parent = t1->parent;
+    t1->parent = t2->parent;
+    t2->parent = t1_old_parent;
+
 //
 //    T& old_t1_info = t1->info;
 //    t1->info = t2->info;
