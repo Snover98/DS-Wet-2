@@ -328,6 +328,15 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
     }
 
     swap(t1->parent, t2->parent);
+
+    //if one of them is the root, change the root
+    if(root == t1){
+        root = t2;
+    } else if(root == t2){
+        root = t1;
+    }
+
+
 //    TreeNode<T>* t1_old_parent = t1->parent;
 //    t1->parent = t2->parent;
 //    t2->parent = t1_old_parent;
