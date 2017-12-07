@@ -427,6 +427,9 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
         sorted[i]->getTrainer().addGladiator(*sorted[i]);
     }
 
+    //update top gladiator
+    topGladiator = sorted[0];
+
     //delete all allocated arrays
     delete stimulated;
     delete unchanged;
