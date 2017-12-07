@@ -11,6 +11,11 @@ Trainer::Trainer(int id):ID(id), num_of_gladiators(0), top_gladiator(NULL),
     gladiators = new SplayTree<Gladiator>(trainer_comp);
 }
 
+Trainer::~Trainer(){
+    delete gladiators;
+}
+
+
 void Trainer::addGladiator(Gladiator& gladiator) {
     //insert the gladiator and then increase the number of gladiators
     gladiators->insert(gladiator);
