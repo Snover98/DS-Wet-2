@@ -370,7 +370,7 @@ void Coliseum::mergeGladiatorsArrays(Gladiator** arr1, int size1,
 
     //until the remaining array is done
     while(arr1Counter < size1 || arr2Counter < size2) {
-        if(arr1Counter < (size1-1)) {
+        if(arr1Counter < size1) {
             newArr[i] = arr1[arr1Counter];
             arr1Counter++;
         } else {
