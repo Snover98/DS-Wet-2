@@ -81,6 +81,7 @@ Coliseum::~Coliseum() {
 
     delete trainersList;
 
+    //delete the gladiators too
     splayGladsId->removeAllAndDeleteInfo();
     delete splayGladsId;
 }
