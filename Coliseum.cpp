@@ -178,7 +178,8 @@ void Coliseum::FreeGladiatorFromColiseum(int gladiatorID) {
         topGladiator = (*it).getTopGladiator();
 
         while(it != trainersList->end()){
-            if(topGladiator == NULL || (*it).getTopGladiator()->getLevel() > topGladiator->getLevel()) {
+            if((*it).getTopGladiator() != NULL &&
+                    (topGladiator == NULL || (*it).getTopGladiator()->getLevel() > topGladiator->getLevel())) {
                 topGladiator = (*it).getTopGladiator();
             }
             it++;
