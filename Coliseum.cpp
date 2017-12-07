@@ -69,9 +69,6 @@ Coliseum::Coliseum(): topGladiator(NULL), gladiatorsNum(0),
 }
 
 Coliseum::~Coliseum() {
-    splayGladsId->removeAllAndDeleteInfo();
-
-    delete splayGladsLvl;
     delete splayGladsLvl;
 
 //    List<Trainer>::Iterator it = trainersList->begin();
@@ -83,6 +80,9 @@ Coliseum::~Coliseum() {
 //    }
 
     delete trainersList;
+
+    splayGladsId->removeAllAndDeleteInfo();
+    delete splayGladsId;
 }
 
 void Coliseum::AddTrainerToColiseum(int trainerID) {
