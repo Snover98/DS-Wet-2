@@ -103,6 +103,7 @@ public:
 
 template<class T>
 BinTree<T>::~BinTree(){
+    //empty the tree and delete the comparison functor
     removeAll();
     delete &comp;
 }
@@ -116,8 +117,8 @@ T* BinTree<T>::find(T& info) {
 
     //search for a node with the info
     TreeNode<T>* found = findNode(info, root);
-
-    if(comp(found->info, info) == 0){//if the found node was the correct one
+    //if the found node was the correct one
+    if(comp(found->info, info) == 0){
         return &(found->info);
     }
 
@@ -171,90 +172,101 @@ bool BinTree<T>::remove(T& info) {
 
 template<class T>
 void BinTree<T>::removeAll() {
+    //use the recursive function
     removeAllNodes(root);
     root = NULL;
 }
 
 template<class T>
 void BinTree<T>::removeAllNodes(TreeNode<T>* p) {
+    //check for NULL pointer
     if (p == NULL){
         return;
     }
 
+    //remove for the left and right children
     removeAllNodes(p->left);
-
     removeAllNodes(p->right);
 
+    //delete the node
     delete p;
 }
 
 template<class T>
 void BinTree<T>::removeAllAndDeleteInfo() {
+    //use the recursive function
     removeAllNodesAndDeleteInfo(root);
     root = NULL;
 }
 
 template<class T>
 void BinTree<T>::removeAllNodesAndDeleteInfo(TreeNode<T>* p) {
+    //check for NULL pointer
     if(p == NULL){
         return;
     }
 
+    //remove for the left and right children
     removeAllNodesAndDeleteInfo(p->left);
-
     removeAllNodesAndDeleteInfo(p->right);
 
+    //delete the node and it's info
     delete &(p->info);
     delete p;
 }
 
 template<class T>
 void BinTree<T>::Inorder(Func<T>& func) {
+    //use the recursive function
     recursiveInorder(root, func);
 }
 
 template<class T>
 void BinTree<T>::recursiveInorder(TreeNode<T>* p, Func<T>& func) {
+    //check for NULL pointer
     if (p == NULL){
         return;
     }
 
+    //do for the left, then this, then the right
     recursiveInorder(p->left, func);
-
     func(p->info);
-
     recursiveInorder(p->right, func);
 }
 
 template<class T>
 void BinTree<T>::Postorder(Func<T>& func) {
+    //use the recursive function
     recursivePostorder(root, func);
 }
 
 template<class T>
 void BinTree<T>::recursivePostorder(TreeNode<T>* p, Func<T>& func) {
+    //check for NULL pointer
     if (p == NULL){
         return;
     }
 
+    //do for the left, then the right, then this
     recursivePostorder(p->left, func);
-
     recursivePostorder(p->right, func);
-
     func(p->info);
 }
 
 template<class T>
 void BinTree<T>::Preorder(Func<T>& func) {
+    //use the recursive function
     recursivePreorder(root, func);
 }
 
 template<class T>
 void BinTree<T>::recursivePreorder(TreeNode<T>* p, Func<T>& func) {
+    //check for NULL pointer
     if (p == NULL){
         return;
     }
 
+    //do for this, then the left, then the right,
     func(p->info);
 
     recursivePreorder(p->left, func);
@@ -264,19 +276,20 @@ void BinTree<T>::recursivePreorder(TreeNode<T>* p, Func<T>& func) {
 
 template<class T>
 void BinTree<T>::InverseOrder(Func<T>& func){
+    //use the recursive function
     recursiveInverseOrder(root, func);
 }
 
 template<class T>
 void BinTree<T>::recursiveInverseOrder(TreeNode<T>* p, Func<T>& func) {
+    //check for NULL pointer
     if (p == NULL){
         return;
     }
 
+    //do for the right, then this, then the left
     recursiveInverseOrder(p->right, func);
-
     func(p->info);
-
     recursiveInverseOrder(p->left, func);
 }
 
@@ -286,29 +299,19 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
     if(t1->left != NULL){
         t1->left->parent = t2;
     }
-
     if(t2->left != NULL){
         t2->left->parent = t1;
     }
-
     swap(t1->left, t2->left);
-//    TreeNode<T>* t1_old_left = t1->left;
-//    t1->left = t2->left;
-//    t2->left = t1_old_left;
 
     //switch right children
     if(t1->right != NULL){
         t1->right->parent = t2;
     }
-
     if(t2->right != NULL){
         t2->right->parent = t1;
     }
-
     swap(t1->right, t2->right);
-//    TreeNode<T>* t1_old_right = t1->right;
-//    t1->right = t2->right;
-//    t2->right = t1_old_right;
 
     //switch parents
     if(t1->parent != NULL){
@@ -318,7 +321,6 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
             t1->parent->left = t2;
         }
     }
-
     if(t2->parent != NULL){
         if(t2->parent->right == t2){
             t2->parent->right = t1;
@@ -326,7 +328,6 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
             t2->parent->left = t1;
         }
     }
-
     swap(t1->parent, t2->parent);
 
     //if one of them is the root, change the root
@@ -335,16 +336,6 @@ void BinTree<T>::switchNodes(TreeNode<T> *t1, TreeNode<T> *t2) {
     } else if(root == t2){
         root = t1;
     }
-
-
-//    TreeNode<T>* t1_old_parent = t1->parent;
-//    t1->parent = t2->parent;
-//    t2->parent = t1_old_parent;
-
-//
-//    T& old_t1_info = t1->info;
-//    t1->info = t2->info;
-//    t2->info = old_t1_info;
 }
 
 template<class T>
@@ -377,12 +368,15 @@ TreeNode<T>* BinTree<T>::findNode(T &info, TreeNode<T> *start){
 
 template<class T>
 TreeNode<T>* BinTree<T>::findMaxNode(TreeNode<T> *start){
+    //check for NULL pointer
     if(isEmpty()){
         return NULL;
     }
 
+    //start from the start
     TreeNode<T>* curr = start;
 
+    //go as far right as possible
     while (curr->right != NULL) {
         curr = curr->right;
     }
@@ -391,12 +385,15 @@ TreeNode<T>* BinTree<T>::findMaxNode(TreeNode<T> *start){
 
 template<class T>
 TreeNode<T>* BinTree<T>::findMinNode(TreeNode<T> *start){
+    //check for NULL pointer
     if(isEmpty()){
         return NULL;
     }
 
+    //start from the start
     TreeNode<T>* curr = start;
 
+    //go as far left as possible
     while (curr->left != NULL) {
         curr = curr->left;
     }
