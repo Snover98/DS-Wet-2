@@ -22,7 +22,6 @@ private:
     int gladiators_num;
 
     void emptyLevelTrees();
-    void makeArrayNull(Gladiator** arr, int size);
 public:
     //// Constructs a new Coliseum
     Coliseum();

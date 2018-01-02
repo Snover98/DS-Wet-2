@@ -86,12 +86,6 @@ Coliseum::~Coliseum() {
     delete splay_glads_id;
 }
 
-void Coliseum::makeArrayNull(Gladiator** arr, int size){
-    for(int i=0; i<size; i++){
-        arr[i]=NULL;
-    }
-}
-
 void Coliseum::AddTrainerToColiseum(int trainerID) {
     //if there are no trainers
     if(trainers_list->getSize() == 0){
@@ -449,10 +443,6 @@ void Coliseum::UpdateLevelsInColiseum(int stimulantCode, int stimulantFactor) {
     top_gladiator = sorted[0];
 
     //delete all allocated arrays
-    makeArrayNull(stimulated, gladiators_num);
-    makeArrayNull(unchanged, gladiators_num);
-    makeArrayNull(sorted, gladiators_num);
-
     delete[] stimulated;
     delete[] unchanged;
     delete[] sorted;
